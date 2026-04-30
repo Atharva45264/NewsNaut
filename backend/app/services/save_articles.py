@@ -1,7 +1,9 @@
 from app.database.mongo import articles_collection
 
 def save_articles(data):
-    if not data:
-        return
+    for item in data:
+        # check if already exists
+        existing = articles_collection.find_one({"link": item["link"]})
 
-    articles_collection.insert_many(data)
+        if not existing:
+            articles_collection.insert_one(item)

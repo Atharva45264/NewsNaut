@@ -6,12 +6,10 @@ from app.services.email_service import send_email
 def run_pipeline():
     print("Fetching news...")
     data = fetch_news()
-
-    print("Saving...")
     save_articles(data)
 
     print("Summarizing...")
-    summarize_articles()
+    summarize_articles()   
 
     print("Sending email...")
     send_email()
