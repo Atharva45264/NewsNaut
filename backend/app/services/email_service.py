@@ -36,13 +36,13 @@ def send_email():
     msg = MIMEText(content)
 
     msg["Subject"] = "Daily AI News Digest"
-    msg["From"] = "atharvaphanse403@gmail.com"
-    msg["To"] = "sakshiphanse92@gmail.com"
+    msg["From"] = "rohitsharma6788909@gmail.com"
+    msg["To"] = "atharvaphanse403@gmail.com"
 
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
 
-    server.login("atharvaphanse403@gmail.com", "gdgicuqxrbtbmzxi")
+    server.login("rohitsharma6788909@gmail.com", "hzopctxxboxsqivw")
 
     server.send_message(msg)
     server.quit()
