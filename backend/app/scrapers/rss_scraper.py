@@ -21,9 +21,25 @@ def detect_category(title, content):
 
     # 🤖 AI (VERY STRICT)
     ai_keywords = [
-        "artificial intelligence", "machine learning",
-        "chatgpt", "openai", "llm", "ai model",
-        "neural network", "deep learning"
+        "artificial intelligence",
+    "machine learning",
+    "deep learning",
+    "neural network",
+    "ai model",
+    "llm",
+    "chatgpt",
+    "openai",
+    "google ai",
+    "meta ai",
+    "anthropic",
+    "ai startup",
+    "automation",
+    "robotics",
+    "data science",
+    "generative ai",
+    "ai tool",
+    "ai system",
+    "ai research"
     ]
 
     # 🔥 PRIORITY ORDER (IMPORTANT)
@@ -44,6 +60,9 @@ def fetch_news():
         "https://timesofindia.indiatimes.com/rssfeedstopstories.cms",
         "https://www.thehindu.com/news/national/feeder/default.rss",
         "https://analyticsindiamag.com/feed/"
+        "https://analyticsindiamag.com/feed/",
+        "https://www.marktechpost.com/feed/",
+        "https://www.artificialintelligence-news.com/feed/"
     ]
 
     articles = []

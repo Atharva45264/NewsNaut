@@ -12,11 +12,19 @@ def get_top_by_category(articles, category):
     result = []
 
     for a in articles:
-        if (
-            a.get("category") == category
-            and a.get("summary_ai")  # ✅ ensure summary exists
-        ):
+        if a.get("category") == category and a.get("summary_ai"):
             result.append(a)
+
+    # 🔥 FALLBACK (if empty)
+    if not result:
+        from app.database.mongo import articles_collection
+
+        fallback = list(
+            articles_collection.find({"category": category})
+            .sort("created_at", -1)
+            .limit(2)
+        )
+        return fallback
 
     return result[:2]
 
