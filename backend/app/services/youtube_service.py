@@ -6,16 +6,17 @@ import datetime
 
 # 🔥 USE PROPER CHANNEL VIDEO URLs
 CHANNELS = [
-    "https://www.youtube.com/c/OpenAI/videos",
-    "https://www.youtube.com/c/lexfridman/videos"
+    "https://www.youtube.com/@TanayCricket/videos",
+    "https://www.youtube.com/@ashishcode/videos",
+    "https://www.youtube.com/@LokeshBagora/videos"
 ]
-
 
 def get_latest_video(channel_url):
     try:
         ydl = yt_dlp.YoutubeDL({
             "quiet": True,
-            "extract_flat": True
+            "extract_flat": True,
+            "skip_download": True
         })
 
         info = ydl.extract_info(channel_url, download=False)
@@ -23,33 +24,16 @@ def get_latest_video(channel_url):
         if "entries" in info and len(info["entries"]) > 0:
             latest = info["entries"][0]
 
-            print(f"🎥 Found video: {latest.get('title')}")
-
             return {
                 "video_id": latest.get("id"),
-                "title": latest.get("title")
+                "title": latest.get("title"),
+                "description": latest.get("description", "")
             }
 
     except Exception as e:
         print("❌ Error fetching video:", e)
 
     return None
-
-
-def get_transcript(video_id):
-    try:
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)
-
-        text = " ".join([t["text"] for t in transcript])
-
-        print("📝 Transcript fetched")
-
-        return text[:1500]
-
-    except Exception as e:
-        print("❌ Transcript error:", e)
-        return ""
-
 
 def process_youtube():
     print("🔵 Processing YouTube...")
@@ -60,32 +44,29 @@ def process_youtube():
         video = get_latest_video(channel)
 
         if not video:
-            print("❌ No video found")
             continue
 
-        # 🔥 CHECK DUPLICATE
+        # 🔥 avoid duplicate (same video every day)
         exists = articles_collection.find_one({"link": video["video_id"]})
-
         if exists:
             print("⚠️ Already exists, skipping")
             continue
 
-        transcript = get_transcript(video["video_id"])
+        content = video["title"] + " " + video.get("description", "")
 
-        if not transcript:
-            print("❌ No transcript, skipping")
-            continue
+        if len(content) < 20:
+            content = video["title"]
 
-        # 🔥 SAVE TO DB
         articles_collection.insert_one({
             "title": video["title"],
             "link": video["video_id"],
-            "content": transcript,
-            "category": "ai",
+            "content": content,
+            "category": "youtube",
             "source": "youtube",
+            "channel": channel,
             "created_at": datetime.datetime.utcnow()
         })
 
-        print(f"✅ Added video: {video['title']}")
+        print(f"✅ Added latest video: {video['title']}")
 
     print("\n✅ YouTube step completed")

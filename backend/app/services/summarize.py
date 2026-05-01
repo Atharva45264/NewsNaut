@@ -29,35 +29,60 @@ def clean_summary(text: str) -> str:
 
 
 def summarize_articles():
-    # 🔥 Only unsummarized articles (LIMIT for speed)
-    articles = list(
-        articles_collection.find({"summary_ai": {"$exists": False}}).limit(5)
+    # 🔥 PRIORITY: summarize YouTube first
+    youtube_articles = list(
+        articles_collection.find({
+            "summary_ai": {"$exists": False},
+            "source": "youtube"
+        }).limit(5)
     )
+
+    # 🔥 Then summarize normal news
+    news_articles = list(
+        articles_collection.find({
+            "summary_ai": {"$exists": False},
+            "source": {"$ne": "youtube"}
+        }).limit(5)
+    )
+
+    # Combine both
+    articles = youtube_articles + news_articles
 
     print(f"Summarizing {len(articles)} articles...")
 
     for article in articles:
         content = article.get("content", "")
 
-        # Skip weak content
-        if not content or len(content) < 100:
+        # 🔥 Skip empty content
+        if not content:
             continue
 
-        # Limit size for faster processing
-        content = content[:1500]
+        # 🔥 Different prompt for YouTube
+        if article.get("source") == "youtube":
+            prompt = f"""
+This is a YouTube video title and description.
 
-        # 🔥 STRONG PROMPT
-        prompt = f"""
+Write a short 2-3 line explanation of what this video is likely about.
+
+Do NOT ask questions.
+Do NOT say "I don't know".
+Do NOT mention missing information.
+
+Content:
+{content}
+"""
+        else:
+            content = content[:1500]
+
+            prompt = f"""
 You are a professional news editor.
 
 Write a concise news summary in 3-4 lines.
 
 STRICT RULES:
 - Only return the summary
-- Do NOT add headings
-- Do NOT add "Here is a summary"
-- Do NOT explain anything
-- Write in clean, natural news style
+- No headings
+- No extra text
 
 Article:
 {content}
@@ -75,7 +100,7 @@ Article:
             # 🔥 Clean unwanted phrases
             summary = clean_summary(summary)
 
-            # Save to DB
+            # 🔥 Save to DB
             articles_collection.update_one(
                 {"_id": article["_id"]},
                 {"$set": {"summary_ai": summary}}

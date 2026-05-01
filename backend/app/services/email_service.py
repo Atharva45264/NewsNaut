@@ -9,25 +9,21 @@ load_dotenv()
 
 # 🔥 Get top 2 VALID articles per category
 def get_top_by_category(articles, category):
-    result = []
+    if category != "youtube":
+        result = [a for a in articles if a.get("category") == category]
+        return result[:2]
+
+    # 🔥 SPECIAL LOGIC FOR YOUTUBE
+    channel_map = {}
 
     for a in articles:
-        if a.get("category") == category and a.get("summary_ai"):
-            result.append(a)
+        if a.get("category") == "youtube":
+            channel = a.get("channel")
 
-    # 🔥 FALLBACK (if empty)
-    if not result:
-        from app.database.mongo import articles_collection
+            if channel not in channel_map:
+                channel_map[channel] = a  # take latest per channel
 
-        fallback = list(
-            articles_collection.find({"category": category})
-            .sort("created_at", -1)
-            .limit(2)
-        )
-        return fallback
-
-    return result[:2]
-
+    return list(channel_map.values())
 
 # 🔥 Format each section cleanly
 def format_section(title, articles):
@@ -57,6 +53,7 @@ def send_email():
     politics = get_top_by_category(articles, "politics")
     sports = get_top_by_category(articles, "sports")
     ai = get_top_by_category(articles, "ai")
+    youtube = get_top_by_category(articles, "youtube")
 
     # 🔥 Build content
     content = "📬 DAILY NEWS DIGEST\n"
@@ -69,6 +66,9 @@ def send_email():
     content += "------------------------------------\n\n"
 
     content += format_section("🤖 AI & TECHNOLOGY", ai)
+
+    content += "------------------------------------\n\n"
+    content += format_section("🎥 YOUTUBE UPDATES", youtube)
 
     # 🔥 Email setup (SAFE: use env variables)
     msg = MIMEText(content)
