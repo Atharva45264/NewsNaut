@@ -7,13 +7,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-# 🔥 Get top 2 VALID articles per category
+# 🔥 Get top articles per category
 def get_top_by_category(articles, category):
     if category != "youtube":
         result = [a for a in articles if a.get("category") == category]
         return result[:2]
 
-    # 🔥 SPECIAL LOGIC FOR YOUTUBE
+    # 🔥 1 video per channel
     channel_map = {}
 
     for a in articles:
@@ -21,11 +21,12 @@ def get_top_by_category(articles, category):
             channel = a.get("channel")
 
             if channel not in channel_map:
-                channel_map[channel] = a  # take latest per channel
+                channel_map[channel] = a
 
     return list(channel_map.values())
 
-# 🔥 Format each section cleanly
+
+# 🔥 Format section
 def format_section(title, articles):
     section = f"{title}\n\n"
 
@@ -34,14 +35,13 @@ def format_section(title, articles):
         return section
 
     for a in articles:
-        section += f"📰 {a.get('title', 'No Title')}\n"
-
         summary = a.get("summary_ai", "").strip()
 
-        if summary:
-            section += f"{summary}\n\n"
-        else:
-            continue  # skip bad data
+        if not summary:
+            continue
+
+        section += f"📰 {a.get('title', 'No Title')}\n"
+        section += f"{summary}\n\n"
 
     return section
 
@@ -49,13 +49,13 @@ def format_section(title, articles):
 def send_email():
     articles = rank_articles()
 
-    # 🔥 Get filtered + summarized articles only
+    # 🔥 Categories
     politics = get_top_by_category(articles, "politics")
     sports = get_top_by_category(articles, "sports")
     ai = get_top_by_category(articles, "ai")
     youtube = get_top_by_category(articles, "youtube")
 
-    # 🔥 Build content
+    # 🔥 Email content
     content = "📬 DAILY NEWS DIGEST\n"
     content += "====================================\n\n"
 
@@ -66,29 +66,33 @@ def send_email():
     content += "------------------------------------\n\n"
 
     content += format_section("🤖 AI & TECHNOLOGY", ai)
-
     content += "------------------------------------\n\n"
+
     content += format_section("🎥 YOUTUBE UPDATES", youtube)
 
-    # 🔥 Email setup (SAFE: use env variables)
+    # 🔥 ENV VARIABLES
+    EMAIL_USER = os.getenv("EMAIL_USER")
+    EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+    EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
+
+    if not EMAIL_USER or not EMAIL_PASSWORD or not EMAIL_RECEIVER:
+        print("❌ Missing email environment variables")
+        return
+
+    # 🔥 Create email
     msg = MIMEText(content)
     msg["Subject"] = "Daily News Digest"
-    msg["From"] = os.getenv("EMAIL_USER")
-    msg["To"] = os.getenv("EMAIL_RECEIVER")
+    msg["From"] = EMAIL_USER
+    msg["To"] = EMAIL_RECEIVER
 
+    # 🔥 Send email
     try:
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.starttls()
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(EMAIL_USER, EMAIL_PASSWORD)
+            server.send_message(msg)
 
-        server.login(
-            os.getenv("EMAIL_USER"),
-            os.getenv("EMAIL_PASS")
-        )
-
-        server.send_message(msg)
-        server.quit()
-
-        print("Email sent successfully")
+        print("✅ Email sent successfully")
 
     except Exception as e:
-        print("Email error:", e)
+        print("❌ Email error:", e)
