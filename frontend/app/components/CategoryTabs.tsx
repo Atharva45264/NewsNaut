@@ -1,18 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-export default function CategoryTabs({ setCategory }: any) {
-  const tabs = ["politics", "sports", "ai", "youtube"];
+const tabs = [
+  { key: "politics", label: "🏛️ Politics" },
+  { key: "sports", label: "⚽ Sports" },
+  { key: "ai", label: "🤖 AI" },
+  { key: "youtube", label: "🎥 YouTube" },
+];
 
+export default function CategoryTabs({ category, setCategory }: any) {
   return (
-    <div className="flex gap-4 mb-6">
-      {tabs.map((tab) => (
+    <div className="flex flex-wrap gap-3 mb-6">
+      {tabs.map((t) => (
         <button
-          key={tab}
-          onClick={() => setCategory(tab)}
-          className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-blue-500"
+          key={t.key}
+          onClick={() => setCategory(t.key)}
+          className={`px-4 py-2 rounded-xl border transition ${
+            category === t.key
+              ? "bg-blue-600 border-blue-600 text-white"
+              : "bg-gray-900 border-gray-800 hover:border-gray-600"
+          }`}
         >
-          {tab.toUpperCase()}
+          {t.label}
         </button>
       ))}
     </div>

@@ -5,33 +5,46 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import NewsCard from "./components/NewsCard";
 import CategoryTabs from "./components/CategoryTabs";
+import Navbar from "./components/Navbar";
 
 export default function Home() {
   const [articles, setArticles] = useState<any[]>([]);
   const [category, setCategory] = useState("politics");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/articles")
-      .then((res) => setArticles(res.data));
+      .get("http://localhost:8000/articles")
+      .then((res) => {
+        setArticles(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
   }, []);
 
-  const filtered = articles.filter(
-    (a) => a.category === category
-  );
+  const filtered = articles.filter((a) => a.category === category);
 
   return (
-    <main className="min-h-screen bg-black p-6">
-      <h1 className="text-3xl font-bold text-white mb-6">
-        📰 NewsNaut Dashboard
-      </h1>
+    <main>
+      <Navbar />
 
-      <CategoryTabs setCategory={setCategory} />
+      <div className="container px-4 py-6">
+        <CategoryTabs category={category} setCategory={setCategory} />
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map((article, index) => (
-          <NewsCard key={index} article={article} />
-        ))}
+        {loading ? (
+          <p className="text-gray-400">Loading news...</p>
+        ) : filtered.length === 0 ? (
+          <p className="text-gray-500">No articles available.</p>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filtered.map((article, i) => (
+              <NewsCard key={i} article={article} />
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );
