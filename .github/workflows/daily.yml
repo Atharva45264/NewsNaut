@@ -1,0 +1,28 @@
+name: Daily News Automation
+
+on:
+  schedule:
+    - cron: "30 2 * * *"   # runs daily (UTC time)
+  workflow_dispatch:
+
+jobs:
+  run-news:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements.txt
+
+      - name: Run pipeline
+        run: |
+          cd backend
+          python run_pipeline.py
