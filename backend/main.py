@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from app.scrapers.rss_scraper import fetch_news
 from app.services.save_articles import save_articles
 from app.services.get_articles import get_articles
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -38,3 +39,11 @@ from app.services.pipeline import run_pipeline
 def run():
     run_pipeline()
     return {"message": "Pipeline executed"}
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # for dev
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
