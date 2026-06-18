@@ -89,31 +89,49 @@ The system is fully automated using GitHub Actions and stores all processed data
 
 ## Project Structure
 
-backend/
-├── app/
-│ ├── database/
-│ │ └── mongo.py
-│ ├── services/
-│ │ ├── rss_scraper.py
-│ │ ├── save_articles.py
-│ │ ├── rank_articles.py
-│ │ ├── summarize.py
-│ │ ├── youtube_service.py
-│ │ ├── email_service.py
-│ │ └── pipeline.py
-│ └── main.py
+```text
+NewsNaut
 │
-├── run_pipeline.py
-├── requirements.txt
+├── backend
+│   │
+│   ├── app
+│   │   │
+│   │   ├── database
+│   │   │   └── mongo.py
+│   │   │
+│   │   ├── services
+│   │   │   ├── rss_scraper.py
+│   │   │   ├── save_articles.py
+│   │   │   ├── rank_articles.py
+│   │   │   ├── summarize.py
+│   │   │   ├── youtube_service.py
+│   │   │   ├── email_service.py
+│   │   │   └── pipeline.py
+│   │   │
+│   │   └── main.py
+│   │
+│   ├── run_pipeline.py
+│   └── requirements.txt
 │
-frontend/
-├── app/
-│ ├── components/
-│ │ ├── Navbar.tsx
-│ │ ├── NewsCard.tsx
-│ │ └── CategoryTabs.tsx
-│ └── page.tsx
-
+├── frontend
+│   │
+│   ├── app
+│   │   │
+│   │   ├── components
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── NewsCard.tsx
+│   │   │   └── CategoryTabs.tsx
+│   │   │
+│   │   └── page.tsx
+│   │
+│   ├── public
+│   ├── package.json
+│   └── next.config.ts
+│
+└── .github
+    └── workflows
+        └── daily.yml
+```
 ---
 
 ## Workflow
