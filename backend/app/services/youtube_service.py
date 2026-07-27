@@ -6,9 +6,9 @@ import datetime
 
 # 🔥 USE PROPER CHANNEL VIDEO URLs
 CHANNELS = [
-    "https://www.youtube.com/@TanayCricket/videos",
+    "https://www.youtube.com/@padho_with_pratyush/videos",
     "https://www.youtube.com/@ashishcode/videos",
-    "https://www.youtube.com/@LokeshBagora/videos"
+    "https://www.youtube.com/@OnlineStudy4u/videos"
 ]
 
 def get_latest_video(channel_url):

@@ -1,76 +1,58 @@
-import smtplib
-from email.mime.text import MIMEText
-from app.services.rank_articles import rank_articles
 import os
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from dotenv import load_dotenv
+
+from app.services.rank_articles import rank_articles
+from app.templates.email_template import build_email_html
 
 load_dotenv()
 
 
-# 🔥 Get top articles per category
 def get_top_by_category(articles, category):
     if category != "youtube":
-        result = [a for a in articles if a.get("category") == category]
-        return result[:2]
+        return [a for a in articles if a.get("category") == category][:2]
 
-    # 🔥 1 video per channel
     channel_map = {}
 
-    for a in articles:
-        if a.get("category") == "youtube":
-            channel = a.get("channel")
+    for article in articles:
+        if article.get("category") != "youtube":
+            continue
 
-            if channel not in channel_map:
-                channel_map[channel] = a
+        channel = article.get("channel")
+
+        if channel not in channel_map:
+            channel_map[channel] = article
 
     return list(channel_map.values())
 
 
-# 🔥 Format section
-def format_section(title, articles):
-    section = f"{title}\n\n"
-
-    if not articles:
-        section += "No major updates today.\n\n"
-        return section
-
-    for a in articles:
-        summary = a.get("summary_ai", "").strip()
-
-        if not summary:
-            continue
-
-        section += f"📰 {a.get('title', 'No Title')}\n"
-        section += f"{summary}\n\n"
-
-    return section
-
-
 def send_email():
+
     articles = rank_articles()
 
-    # 🔥 Categories
     politics = get_top_by_category(articles, "politics")
     sports = get_top_by_category(articles, "sports")
     ai = get_top_by_category(articles, "ai")
     youtube = get_top_by_category(articles, "youtube")
 
-    # 🔥 Email content
-    content = "📬 DAILY NEWS DIGEST\n"
-    content += "====================================\n\n"
+    stats = {
+        "articles": len(articles),
+        "summaries": len(
+            [a for a in articles if a.get("summary_ai")]
+        ),
+        "videos": len(youtube),
+    }
 
-    content += format_section("🏛️ POLITICS", politics)
-    content += "------------------------------------\n\n"
+    html = build_email_html(
+        politics,
+        sports,
+        ai,
+        youtube,
+        stats,
+    )
 
-    content += format_section("⚽ SPORTS (Cricket & Football)", sports)
-    content += "------------------------------------\n\n"
-
-    content += format_section("🤖 AI & TECHNOLOGY", ai)
-    content += "------------------------------------\n\n"
-
-    content += format_section("🎥 YOUTUBE UPDATES", youtube)
-
-    # 🔥 ENV VARIABLES
     EMAIL_USER = os.getenv("EMAIL_USER")
     EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
     EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
@@ -79,20 +61,20 @@ def send_email():
         print("❌ Missing email environment variables")
         return
 
-    # 🔥 Create email
-    msg = MIMEText(content)
-    msg["Subject"] = "Daily News Digest"
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = "📰 NewsNaut | Daily News Digest"
     msg["From"] = EMAIL_USER
     msg["To"] = EMAIL_RECEIVER
 
-    # 🔥 Send email
+    msg.attach(MIMEText(html, "html"))
+
     try:
         with smtplib.SMTP("smtp.gmail.com", 587) as server:
             server.starttls()
             server.login(EMAIL_USER, EMAIL_PASSWORD)
             server.send_message(msg)
 
-        print("✅ Email sent successfully")
+        print("✅ HTML email sent successfully")
 
     except Exception as e:
         print("❌ Email error:", e)
