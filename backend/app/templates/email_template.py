@@ -11,7 +11,7 @@ def get_card(article, accent_color="#2563eb", button_text="Read More"):
 
     title = article.get("title", "No Title")
     summary = article.get("summary_ai", "No summary available.")
-    url = article.get("url", "#")
+    url = article.get("url") or article.get("link") or "#"
 
     return f"""
     <div style="
@@ -158,7 +158,7 @@ def build_email_html(
     font-size:18px;
     font-family:Arial,sans-serif;
 ">
-Your AI Powered Daily Intelligence Hub
+Your Intelligent Daily News Hub
 </p>
 
 <p style="
@@ -189,9 +189,9 @@ Your AI Powered Daily Intelligence Hub
     line-height:1.8;
     font-family:Arial,sans-serif;
 ">
-Here are today's most important updates from Politics,
-Sports, AI & Technology, and your favorite YouTube channels,
-summarized using Google Gemini.
+Here are today's top stories from Politics, Sports,
+AI & Technology, and YouTube—summarized into concise,
+easy-to-read insights.
 </p>
     """
 
@@ -378,11 +378,11 @@ summarized using Google Gemini.
             line-height:1.8;
             font-family:Arial,sans-serif;
         ">
-            Thank you for reading today's AI-powered news digest.
-            <br><br>
-            Stay informed with the latest updates from Politics,
-            Sports, AI & Technology, and YouTube—all summarized by
-            Google Gemini.
+            Thank you for reading today's NewsNaut Daily Digest.
+<br><br>
+Stay informed with carefully curated news from trusted
+sources, summarized into quick insights so you can
+catch up in minutes.
         </p>
 
         <div style="
@@ -397,7 +397,7 @@ summarized using Google Gemini.
                 margin:0;
                 font-family:Arial,sans-serif;
             ">
-                Made with ❤️ using FastAPI • MongoDB • Gemini • Next.js
+                Made with ❤️ using FastAPI • MongoDB • Next.js
             </p>
 
             <p style="

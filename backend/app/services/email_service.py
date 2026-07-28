@@ -1,4 +1,5 @@
 import os
+from pprint import pprint
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -29,8 +30,11 @@ def get_top_by_category(articles, category):
 
 
 def send_email():
-
     articles = rank_articles()
+
+    print("\n========== FIRST ARTICLE ==========\n")
+    pprint(articles[0])
+    print("\n==================================\n")
 
     politics = get_top_by_category(articles, "politics")
     sports = get_top_by_category(articles, "sports")
@@ -54,10 +58,10 @@ def send_email():
     )
 
     EMAIL_USER = os.getenv("EMAIL_USER")
-    EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+    EMAIL_PASS = os.getenv("EMAIL_PASS")
     EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
 
-    if not EMAIL_USER or not EMAIL_PASSWORD or not EMAIL_RECEIVER:
+    if not EMAIL_USER or not EMAIL_PASS or not EMAIL_RECEIVER:
         print("❌ Missing email environment variables")
         return
 
@@ -71,7 +75,7 @@ def send_email():
     try:
         with smtplib.SMTP("smtp.gmail.com", 587) as server:
             server.starttls()
-            server.login(EMAIL_USER, EMAIL_PASSWORD)
+            server.login(EMAIL_USER, EMAIL_PASS)
             server.send_message(msg)
 
         print("✅ HTML email sent successfully")

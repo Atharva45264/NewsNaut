@@ -13,7 +13,7 @@ load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 MODEL = "llama-3.1-8b-instant"
-SUMMARY_LIMIT = 20
+SUMMARY_LIMIT = 100
 
 
 def clean_summary(text: str):

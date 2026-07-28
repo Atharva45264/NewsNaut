@@ -1,16 +1,32 @@
 from app.database.mongo import articles_collection
 import datetime
 
-USER_INTERESTS = ["AI", "technology", "startup", "machine learning"]
+USER_INTERESTS = [
+    "AI",
+    "technology",
+    "startup",
+    "machine learning",
+]
+
 
 def rank_articles():
     today = datetime.datetime.utcnow().date()
 
-    articles = list(articles_collection.find())
+    # Only fetch articles that already have an AI summary
+    articles = list(
+        articles_collection.find(
+            {
+                "summary_ai": {
+                    "$exists": True,
+                    "$ne": ""
+                }
+            }
+        )
+    )
 
     filtered = []
 
-    # 🔥 STEP 1: FILTER ONLY TODAY'S NEWS
+    # Keep only today's news
     for article in articles:
         created = article.get("created_at")
 
@@ -19,25 +35,26 @@ def rank_articles():
 
     ranked = []
 
-    # 🔥 STEP 2: APPLY YOUR EXISTING RANKING LOGIC
     for article in filtered:
         score = 0
 
         title = article.get("title", "")
         summary = article.get("summary_ai", "")
 
-        text = (title + " " + summary).lower()
+        text = f"{title} {summary}".lower()
 
         for interest in USER_INTERESTS:
             if interest.lower() in text:
                 score += 1
 
         article["score"] = score
+
+        # Remove MongoDB ObjectId before returning
         article.pop("_id", None)
 
         ranked.append(article)
 
-    # 🔥 STEP 3: SORT
+    # Highest score first
     ranked.sort(key=lambda x: x["score"], reverse=True)
 
     return ranked
