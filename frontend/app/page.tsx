@@ -1,50 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+import Link from "next/link";
 
-import { useEffect, useState } from "react";
-import axios from "axios";
-import NewsCard from "./components/NewsCard";
-import CategoryTabs from "./components/CategoryTabs";
-import Navbar from "./components/Navbar";
-
-export default function Home() {
-  const [articles, setArticles] = useState<any[]>([]);
-  const [category, setCategory] = useState("politics");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:8000/articles")
-      .then((res) => {
-        setArticles(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
-
-  const filtered = articles.filter((a) => a.category === category);
-
+export default function LandingPage() {
   return (
-    <main>
-      <Navbar />
+    <main className="min-h-screen flex flex-col items-center justify-center px-6">
+      <h1 className="text-5xl font-bold">NewsNaut</h1>
 
-      <div className="container px-4 py-6">
-        <CategoryTabs category={category} setCategory={setCategory} />
+      <p className="mt-4 max-w-xl text-center text-gray-500">
+        AI-powered news aggregator with smart summaries, personalized feeds,
+        and daily newsletters.
+      </p>
 
-        {loading ? (
-          <p className="text-gray-400">Loading news...</p>
-        ) : filtered.length === 0 ? (
-          <p className="text-gray-500">No articles available.</p>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((article, i) => (
-              <NewsCard key={i} article={article} />
-            ))}
-          </div>
-        )}
+      <div className="mt-8 flex gap-4">
+        <Link
+          href="/sign-up"
+          className="rounded-lg bg-black px-6 py-3 text-white"
+        >
+          Get Started
+        </Link>
+
+        <Link
+          href="/sign-in"
+          className="rounded-lg border px-6 py-3"
+        >
+          Sign In
+        </Link>
       </div>
     </main>
   );
