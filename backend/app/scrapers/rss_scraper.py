@@ -1,10 +1,10 @@
 import datetime
 import feedparser
 
-
 # ==============================
 # CATEGORY DETECTOR
 # ==============================
+
 
 def detect_category(title, content):
     text = f"{title} {content}".lower()
@@ -88,7 +88,6 @@ def detect_category(title, content):
         "deepmind",
     ]
 
-    # Priority
     if any(keyword in text for keyword in sports_keywords):
         return "sports"
 
@@ -105,12 +104,12 @@ def detect_category(title, content):
 # RSS SCRAPER
 # ==============================
 
+
 def fetch_news():
     feeds = [
         # India News
         "https://timesofindia.indiatimes.com/rssfeedstopstories.cms",
         "https://www.thehindu.com/news/national/feeder/default.rss",
-
         # AI & Technology
         "https://analyticsindiamag.com/feed/",
         "https://www.marktechpost.com/feed/",
@@ -131,11 +130,28 @@ def fetch_news():
             if feed.bozo:
                 print(f"⚠️ Couldn't parse: {url}")
 
+            source = feed.feed.get("title", "Unknown Source").split("|")[-1].strip()
+
             for entry in feed.entries:
 
                 title = entry.get("title", "")
                 content = entry.get("summary", "")
                 link = entry.get("link", "")
+
+                published = entry.get("published") or entry.get("updated") or ""
+
+                author = entry.get("author", "")
+
+                image = ""
+
+                if "media_content" in entry:
+                    image = entry.media_content[0].get("url", "")
+
+                elif "media_thumbnail" in entry:
+                    image = entry.media_thumbnail[0].get("url", "")
+
+                elif "image" in entry:
+                    image = entry.image.get("href", "")
 
                 if not title or not link:
                     continue
@@ -177,6 +193,10 @@ def fetch_news():
                         "link": link,
                         "content": content,
                         "category": category,
+                        "source": source,
+                        "author": author,
+                        "published_at": published,
+                        "image": image,
                         "created_at": datetime.datetime.utcnow(),
                     }
                 )

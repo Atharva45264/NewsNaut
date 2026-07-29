@@ -3,6 +3,7 @@ from app.scrapers.rss_scraper import fetch_news
 from app.services.save_articles import save_articles
 from app.services.get_articles import get_articles
 from fastapi.middleware.cors import CORSMiddleware
+from app.services.dashboard import dashboard_stats
 
 app = FastAPI()
 
@@ -32,6 +33,33 @@ from app.services.rank_articles import rank_articles
 @app.get("/top")
 def top_articles():
     return rank_articles()
+
+@app.get("/news/latest")
+def latest_news():
+    articles = get_articles()
+    return articles[:10]
+
+
+@app.get("/news/trending")
+def trending_news():
+    return rank_articles()
+
+
+@app.get("/dashboard/stats")
+def stats():
+    return dashboard_stats()
+
+
+@app.get("/summary/today")
+def today_summary():
+    articles = rank_articles()
+
+    if len(articles) == 0:
+        return {"summary": ""}
+
+    return {
+        "summary": articles[0].get("summary", "")
+    }
 
 from app.services.pipeline import run_pipeline
 

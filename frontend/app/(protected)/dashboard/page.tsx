@@ -53,12 +53,14 @@
 import Hero from "@/app/components/dashboard/Hero";
 import QuickStats from "@/app/components/dashboard/QuickStats";
 import Trending from "@/app/components/dashboard/Trending";
+import LatestNews from "@/app/components/dashboard/LatestNews";
 export default function DashboardPage() {
   return (
     <main className="mx-auto max-w-7xl space-y-8 p-6">
       <Hero />
       <QuickStats />
       <Trending />
+      <LatestNews />
     </main>
   );
 }
