@@ -4,6 +4,7 @@ from app.services.save_articles import save_articles
 from app.services.get_articles import get_articles
 from fastapi.middleware.cors import CORSMiddleware
 from app.services.dashboard import dashboard_stats
+from app.routes.bookmarks import router as bookmark_router
 
 app = FastAPI()
 
@@ -67,6 +68,8 @@ from app.services.pipeline import run_pipeline
 def run():
     run_pipeline()
     return {"message": "Pipeline executed"}
+
+app.include_router(bookmark_router)
 
 app.add_middleware(
     CORSMiddleware,

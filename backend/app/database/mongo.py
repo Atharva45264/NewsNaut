@@ -12,3 +12,4 @@ client = MongoClient(
 
 db = client[os.getenv("DB_NAME")]
 articles_collection = db["articles"]
+bookmarks_collection = db["bookmarks"] 
