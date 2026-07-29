@@ -1,5 +1,7 @@
 import datetime
 import feedparser
+from bs4 import BeautifulSoup
+from app.utils.image_extractor import extract_article_image
 
 # ==============================
 # CATEGORY DETECTOR
@@ -104,12 +106,12 @@ def detect_category(title, content):
 # RSS SCRAPER
 # ==============================
 
-
 def fetch_news():
     feeds = [
         # India News
         "https://timesofindia.indiatimes.com/rssfeedstopstories.cms",
         "https://www.thehindu.com/news/national/feeder/default.rss",
+
         # AI & Technology
         "https://analyticsindiamag.com/feed/",
         "https://www.marktechpost.com/feed/",
@@ -130,33 +132,29 @@ def fetch_news():
             if feed.bozo:
                 print(f"⚠️ Couldn't parse: {url}")
 
-            source = feed.feed.get("title", "Unknown Source").split("|")[-1].strip()
+            source = (
+                feed.feed.get("title", "Unknown Source")
+                .split("|")[-1]
+                .strip()
+            )
 
             for entry in feed.entries:
 
-                title = entry.get("title", "")
+                title = entry.get("title", "").strip()
                 content = entry.get("summary", "")
-                link = entry.get("link", "")
+                link = entry.get("link", "").strip()
 
-                published = entry.get("published") or entry.get("updated") or ""
+                published = (
+                    entry.get("published")
+                    or entry.get("updated")
+                    or ""
+                )
 
                 author = entry.get("author", "")
-
-                image = ""
-
-                if "media_content" in entry:
-                    image = entry.media_content[0].get("url", "")
-
-                elif "media_thumbnail" in entry:
-                    image = entry.media_thumbnail[0].get("url", "")
-
-                elif "image" in entry:
-                    image = entry.image.get("href", "")
 
                 if not title or not link:
                     continue
 
-                # Remove duplicates
                 if link in seen_links:
                     continue
 
@@ -169,8 +167,6 @@ def fetch_news():
 
                 text = f"{title} {content}".lower()
 
-                # Keep only Indian Politics & Sports
-                # Allow worldwide AI news
                 if category != "ai":
                     india_keywords = [
                         "india",
@@ -184,8 +180,10 @@ def fetch_news():
                         "pune",
                     ]
 
-                    if not any(word in text for word in india_keywords):
+                    if not any(city in text for city in india_keywords):
                         continue
+
+                image = extract_article_image(link)
 
                 articles.append(
                     {

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { ExternalLink, Bookmark } from "lucide-react";
+import { useBookmark } from "@/hooks/useBookmark";
 
 export type NewsArticle = {
   title: string;
@@ -20,6 +21,13 @@ type Props = {
 };
 
 export default function NewsCard({ article }: Props) {
+
+const {
+  bookmarked,
+  loading,
+  toggleBookmark,
+} = useBookmark(article.link);
+
   return (
     <article className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 transition hover:border-blue-500">
 
@@ -63,9 +71,16 @@ export default function NewsCard({ article }: Props) {
 
         <div className="flex items-center justify-between">
 
-          <button className="rounded-lg border border-slate-700 p-2 transition hover:border-yellow-400 hover:text-yellow-400">
-            <Bookmark size={18} />
-          </button>
+          <button
+  disabled={loading}
+  onClick={toggleBookmark}
+  className="rounded-lg border border-slate-700 p-2 transition hover:border-yellow-400 hover:text-yellow-400 disabled:opacity-50"
+>
+  <Bookmark
+    size={18}
+    fill={bookmarked ? "currentColor" : "none"}
+  />
+</button>
 
           <a
             href={article.link}

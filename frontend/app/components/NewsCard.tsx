@@ -3,6 +3,7 @@
 
 import { motion } from "framer-motion";
 
+
 export default function NewsCard({ article }: any) {
   const isYoutube = article.category === "youtube";
 
