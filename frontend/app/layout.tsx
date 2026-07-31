@@ -104,10 +104,10 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable}`}
-    >
+  lang="en"
+  suppressHydrationWarning
+  className={`light ${geistSans.variable} ${geistMono.variable} ${newsreader.variable}`}
+>
       <body
         className="
           min-h-screen

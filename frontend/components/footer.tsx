@@ -1,71 +1,141 @@
-import { Logo } from '@/components/logo'
+import { Logo } from "@/components/logo";
 
-const columns = [
+const footerLinks = [
   {
-    heading: 'Product',
-    links: ['Features', 'Sources', 'Pricing', 'Changelog'],
+    title: "Product",
+    links: [
+      { label: "Features", href: "#features" },
+      { label: "How It Works", href: "#how-it-works" },
+      { label: "Get Started", href: "#cta" },
+    ],
   },
   {
-    heading: 'Company',
-    links: ['About', 'Careers', 'Blog', 'Press'],
+    title: "Platform",
+    links: [
+      { label: "News Feed", href: "#" },
+      { label: "Bookmarks", href: "#" },
+      { label: "AI Assistant", href: "#" },
+    ],
   },
   {
-    heading: 'Resources',
-    links: ['Documentation', 'API', 'Help center', 'Status'],
+    title: "Company",
+    links: [
+      { label: "About", href: "#" },
+      { label: "Contact", href: "#" },
+      { label: "Privacy Policy", href: "#" },
+      { label: "Terms of Service", href: "#" },
+    ],
   },
-  {
-    heading: 'Legal',
-    links: ['Privacy', 'Terms', 'Cookies', 'Editorial policy'],
-  },
-]
+];
 
 export function Footer() {
   return (
-    <footer className="border-t border-border">
-      <div className="mx-auto max-w-6xl px-6 py-16">
-        <div className="grid grid-cols-2 gap-10 md:grid-cols-6">
-          <div className="col-span-2">
-            <a href="#top" className="flex items-center gap-2" aria-label="NewsNaut home">
-              <Logo className="size-6 text-primary" />
-              <span className="text-base font-semibold tracking-tight">
-                NewsNaut
-              </span>
+    <footer className="relative overflow-hidden border-t border-border bg-background">
+
+      {/* Background Glow */}
+
+      <div className="absolute left-1/2 top-0 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-primary/5 blur-[100px]" />
+
+      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+
+        <div className="grid gap-12 lg:grid-cols-[1.4fr_2fr]">
+
+          {/* Brand */}
+
+          <div>
+
+            <a
+              href="#top"
+              className="flex items-center gap-3"
+            >
+              <Logo className="h-9 w-9 text-primary" />
+
+              <div>
+
+                <h3 className="text-xl font-semibold tracking-tight">
+                  NewsNaut
+                </h3>
+
+                <p className="text-sm text-muted-foreground">
+                  AI-Powered News Platform
+                </p>
+
+              </div>
+
             </a>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Intelligent news, distilled. The signal, without the noise.
+
+            <p className="mt-6 max-w-md leading-7 text-muted-foreground">
+              NewsNaut helps you stay informed with AI-powered summaries,
+              intelligent search, organized categories, bookmarks, and a clean,
+              distraction-free reading experience.
             </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+
+              <span className="rounded-full border border-primary/10 bg-primary/5 px-4 py-2 text-sm font-medium text-primary">
+                AI Summaries
+              </span>
+
+              <span className="rounded-full border border-primary/10 bg-primary/5 px-4 py-2 text-sm font-medium text-primary">
+                Smart Search
+              </span>
+
+              <span className="rounded-full border border-primary/10 bg-primary/5 px-4 py-2 text-sm font-medium text-primary">
+                Real-Time News
+              </span>
+
+            </div>
+
           </div>
 
-          {columns.map((column) => (
-            <div key={column.heading}>
-              <h3 className="text-sm font-medium tracking-tight">
-                {column.heading}
-              </h3>
-              <ul className="mt-4 flex flex-col gap-3">
-                {column.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Links */}
+
+          <div className="grid grid-cols-2 gap-10 md:grid-cols-3">
+
+            {footerLinks.map((section) => (
+              <div key={section.title}>
+
+                <h4 className="text-sm font-semibold uppercase tracking-wider text-foreground">
+                  {section.title}
+                </h4>
+
+                <ul className="mt-5 space-y-3">
+
+                  {section.links.map((link) => (
+                    <li key={link.label}>
+                      <a
+                        href={link.href}
+                        className="text-sm text-muted-foreground transition-colors duration-300 hover:text-primary"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+
+                </ul>
+
+              </div>
+            ))}
+
+          </div>
+
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-border pt-8 sm:flex-row sm:items-center">
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} NewsNaut, Inc. All rights reserved.
+        {/* Bottom */}
+
+        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-sm text-muted-foreground md:flex-row">
+
+          <p>
+            © {new Date().getFullYear()} NewsNaut. All rights reserved.
           </p>
-          <p className="text-sm text-muted-foreground">
-            Made for readers who value their time.
+
+          <p>
+            Built with ❤️ to make news simpler, smarter and faster.
           </p>
+
         </div>
+
       </div>
     </footer>
-  )
+  );
 }

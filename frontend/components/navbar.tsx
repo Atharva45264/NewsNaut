@@ -7,10 +7,8 @@ import { Logo } from '@/components/logo'
 
 const navLinks = [
   { label: 'Home', href: '#top' },
-  { label: 'Features', href: '#product' },
-  { label: 'How it works', href: '#how-it-works' },
-  { label: 'Sources', href: '#sources' },
-  { label: 'Reviews', href: '#reviews' },
+  { label: 'Features', href: '#features' },
+  { label: 'How It Works', href: '#how-it-works' },
 ]
 
 export function Navbar() {
@@ -18,12 +16,14 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10)
+      setScrolled(window.scrollY > 20)
     }
 
     handleScroll()
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    })
 
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -33,28 +33,35 @@ export function Navbar() {
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
           ? 'border-b border-border/70 bg-background/80 shadow-sm backdrop-blur-xl'
-          : 'bg-transparent'
+          : 'bg-background/40 backdrop-blur-lg'
       }`}
     >
-      <div className="mx-auto flex h-18 w-full max-w-7xl items-center justify-between px-6 lg:px-8">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
         {/* Logo */}
         <a
           href="#top"
-          className="flex items-center gap-2 transition-opacity hover:opacity-90"
+          className="flex items-center gap-3 transition-all duration-300 hover:opacity-90"
         >
-          <Logo className="size-6 text-primary" />
-          <span className="text-lg font-semibold tracking-tight">
-            NewsNaut
-          </span>
+          <Logo className="h-8 w-8 text-primary transition-transform duration-300 hover:rotate-6" />
+
+          <div className="leading-none">
+            <h1 className="text-lg font-semibold tracking-tight">
+              NewsNaut
+            </h1>
+
+            <p className="text-xs text-muted-foreground">
+              AI-Powered News
+            </p>
+          </div>
         </a>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-8 lg:flex">
+        {/* Navigation */}
+        <nav className="hidden items-center gap-10 lg:flex">
           {navLinks.map((item) => (
             <a
               key={item.label}
               href={item.href}
-              className="group relative text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-foreground"
+              className="group relative text-[15px] font-medium text-muted-foreground transition-colors duration-300 hover:text-primary"
             >
               {item.label}
 
@@ -63,23 +70,23 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Right Actions */}
+        {/* Actions */}
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="sm"
-            className="hidden rounded-full px-5 text-sm font-medium lg:inline-flex"
+            className="hidden rounded-full px-5 lg:flex"
             nativeButton={false}
-            render={<a href="#cta" />}
+            render={<a href="/sign-in" />}
           >
-            Sign in
+            Sign In
           </Button>
 
           <Button
             size="sm"
-            className="rounded-full px-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+            className="rounded-full px-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
             nativeButton={false}
-            render={<a href="#cta" />}
+            render={<a href="/sign-up" />}
           >
             Get Started
           </Button>
@@ -90,7 +97,7 @@ export function Navbar() {
             size="icon"
             className="lg:hidden"
           >
-            <Menu className="size-5" />
+            <Menu className="h-5 w-5" />
           </Button>
         </div>
       </div>
