@@ -32,36 +32,37 @@ export function Navbar() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'border-b border-border/70 bg-background/80 shadow-sm backdrop-blur-xl'
+          ? 'border-b border-border/70 bg-background/80 shadow-md backdrop-blur-xl'
           : 'bg-background/40 backdrop-blur-lg'
       }`}
     >
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
+      <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8 lg:px-10">
+
         {/* Logo */}
         <a
           href="#top"
-          className="flex items-center gap-3 transition-all duration-300 hover:opacity-90"
+          className="group flex shrink-0 items-center transition-all duration-300 hover:opacity-95"
         >
-          <Logo className="h-8 w-8 text-primary transition-transform duration-300 hover:rotate-6" />
-
-          <div className="leading-none">
-            <h1 className="text-lg font-semibold tracking-tight">
-              NewsNaut
-            </h1>
-
-            <p className="text-xs text-muted-foreground">
-              AI-Powered News
-            </p>
-          </div>
+          <Logo
+            priority
+            className="
+              h-16
+              w-auto
+              object-contain
+              transition-all
+              duration-500
+              group-hover:scale-[1.03]
+            "
+          />
         </a>
 
-        {/* Navigation */}
-        <nav className="hidden items-center gap-10 lg:flex">
+        {/* Desktop Navigation */}
+        <nav className="hidden items-center gap-8 xl:gap-10 lg:flex">
           {navLinks.map((item) => (
             <a
               key={item.label}
               href={item.href}
-              className="group relative text-[15px] font-medium text-muted-foreground transition-colors duration-300 hover:text-primary"
+              className="group relative text-[15px] font-medium text-muted-foreground transition-all duration-300 hover:text-primary"
             >
               {item.label}
 
@@ -70,12 +71,13 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Actions */}
-        <div className="flex items-center gap-3">
+        {/* Right Actions */}
+        <div className="flex shrink-0 items-center gap-4">
+
           <Button
             variant="ghost"
             size="sm"
-            className="hidden rounded-full px-5 lg:flex"
+            className="hidden rounded-full px-5 text-sm lg:flex"
             nativeButton={false}
             render={<a href="/sign-in" />}
           >
@@ -99,6 +101,7 @@ export function Navbar() {
           >
             <Menu className="h-5 w-5" />
           </Button>
+
         </div>
       </div>
     </header>

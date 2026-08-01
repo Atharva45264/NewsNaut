@@ -1,26 +1,26 @@
-import type { Metadata, Viewport } from "next"
-import { Geist, Geist_Mono, Newsreader } from "next/font/google"
+import type { Metadata, Viewport } from "next";
+import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 
-import "./globals.css"
+import "./globals.css";
 
 const geistSans = Geist({
   subsets: ["latin"],
   variable: "--font-geist-sans",
   display: "swap",
-})
+});
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",
   display: "swap",
-})
+});
 
 const newsreader = Newsreader({
   subsets: ["latin"],
   variable: "--font-newsreader",
   style: ["normal", "italic"],
   display: "swap",
-})
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://newsnaut.app"),
@@ -31,20 +31,23 @@ export const metadata: Metadata = {
   },
 
   description:
-    "NewsNaut is an AI-powered news platform that brings together trusted journalism, AI-generated summaries, intelligent search, bookmarks, and a distraction-free reading experience.",
+    "NewsNaut is an AI-powered news platform that aggregates trusted news sources, generates intelligent AI summaries, organizes stories into meaningful categories, and delivers a distraction-free reading experience.",
 
   applicationName: "NewsNaut",
 
   keywords: [
+    "NewsNaut",
     "AI News",
-    "News Aggregator",
-    "AI Summaries",
-    "Latest News",
-    "News Feed",
+    "AI News Aggregator",
+    "News Summaries",
+    "Breaking News",
     "Technology News",
     "Business News",
+    "Politics",
+    "Sports",
     "Bookmarks",
-    "News Assistant",
+    "AI Assistant",
+    "News Feed",
   ],
 
   authors: [
@@ -63,51 +66,72 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: "NewsNaut",
+    title: "NewsNaut — AI Powered News Platform",
     description:
-      "Read the world's news in minutes with AI-powered summaries and trusted sources.",
-    type: "website",
+      "Stay informed with AI-powered news summaries, trusted journalism, intelligent search, bookmarks, and a clean reading experience.",
+
+    url: "https://newsnaut.app",
+
     siteName: "NewsNaut",
+
+    locale: "en_US",
+
+    type: "website",
+
+    images: [
+      {
+        url: "/newsnaut-logo.png",
+        width: 1200,
+        height: 630,
+        alt: "NewsNaut",
+      },
+    ],
   },
 
   twitter: {
     card: "summary_large_image",
+
     title: "NewsNaut",
+
     description:
       "AI-powered news summaries from trusted sources.",
+
+    images: ["/newsnaut-logo.png"],
   },
 
   icons: {
     icon: [
       {
-        url: "/favicon.ico",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
+        url: "/icon.png",
+        type: "image/png",
+        sizes: "32x32",
       },
     ],
 
-    apple: "/apple-icon.png",
+    shortcut: "/icon.png",
+
+    apple: "/icon.png",
   },
-}
+
+  manifest: "/site.webmanifest",
+};
 
 export const viewport: Viewport = {
   themeColor: "#ffffff",
   colorScheme: "light",
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html
-  lang="en"
-  suppressHydrationWarning
-  className={`light ${geistSans.variable} ${geistMono.variable} ${newsreader.variable}`}
->
+      lang="en"
+      suppressHydrationWarning
+      className={`light ${geistSans.variable} ${geistMono.variable} ${newsreader.variable}`}
+    >
       <body
         className="
           min-h-screen
@@ -122,5 +146,5 @@ export default function RootLayout({
         {children}
       </body>
     </html>
-  )
+  );
 }

@@ -42,51 +42,23 @@ export function Footer() {
 
           {/* Brand */}
 
-          <div>
+<div className="space-y-4">
 
-            <a
-              href="#top"
-              className="flex items-center gap-3"
-            >
-              <Logo className="h-9 w-9 text-primary" />
+  <a
+    href="#top"
+    className="inline-flex transition-all duration-300 hover:opacity-90"
+  >
+    <Logo
+      className="h-16 w-auto object-contain transition-transform duration-300 hover:scale-105"
+    />
+  </a>
 
-              <div>
+  <p className="max-w-sm text-sm leading-7 text-muted-foreground">
+    Stay informed with AI-powered news aggregation, intelligent summaries,
+    trusted journalism, and a distraction-free reading experience.
+  </p>
 
-                <h3 className="text-xl font-semibold tracking-tight">
-                  NewsNaut
-                </h3>
-
-                <p className="text-sm text-muted-foreground">
-                  AI-Powered News Platform
-                </p>
-
-              </div>
-
-            </a>
-
-            <p className="mt-6 max-w-md leading-7 text-muted-foreground">
-              NewsNaut helps you stay informed with AI-powered summaries,
-              intelligent search, organized categories, bookmarks, and a clean,
-              distraction-free reading experience.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-
-              <span className="rounded-full border border-primary/10 bg-primary/5 px-4 py-2 text-sm font-medium text-primary">
-                AI Summaries
-              </span>
-
-              <span className="rounded-full border border-primary/10 bg-primary/5 px-4 py-2 text-sm font-medium text-primary">
-                Smart Search
-              </span>
-
-              <span className="rounded-full border border-primary/10 bg-primary/5 px-4 py-2 text-sm font-medium text-primary">
-                Real-Time News
-              </span>
-
-            </div>
-
-          </div>
+</div>
 
           {/* Links */}
 

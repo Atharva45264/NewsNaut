@@ -1,0 +1,16 @@
+{
+  "name": "NewsNaut",
+  "short_name": "NewsNaut",
+  "description": "AI Powered News Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#22c55e",
+  "icons": [
+    {
+      "src": "/newsnaut-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
