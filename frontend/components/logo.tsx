@@ -20,7 +20,7 @@ export function Logo({
       )}
     >
       <Image
-        src={iconOnly ? "/icon2.png" : "/logo5.png"}
+        src={iconOnly ? "/icon.png" : "/newsnaut-logo.png"}
         alt="NewsNaut"
         width={iconOnly ? 42 : 220}
         height={iconOnly ? 42 : 58}

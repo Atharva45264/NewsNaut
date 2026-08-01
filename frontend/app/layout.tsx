@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 
 import "./globals.css";
@@ -127,24 +128,48 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`light ${geistSans.variable} ${geistMono.variable} ${newsreader.variable}`}
+    <ClerkProvider
+      appearance={{
+        variables: {
+  colorPrimary: "#22c55e",
+  colorBackground: "#ffffff",
+  borderRadius: "1rem",
+},
+
+        elements: {
+          card: "shadow-xl border border-border rounded-3xl",
+          rootBox: "w-full",
+          headerTitle: "text-3xl font-bold",
+          headerSubtitle: "text-muted-foreground",
+          socialButtonsBlockButton:
+            "rounded-xl border border-border hover:bg-muted transition-all",
+          formButtonPrimary:
+            "bg-primary hover:bg-primary/90 rounded-xl shadow-sm transition-all",
+          footerActionLink: "text-primary hover:text-primary/80",
+          formFieldInput:
+            "rounded-xl border-border focus:ring-primary",
+        },
+      }}
     >
-      <body
-        className="
-          min-h-screen
-          bg-background
-          font-sans
-          text-foreground
-          antialiased
-          selection:bg-primary/20
-          selection:text-foreground
-        "
+      <html
+        lang="en"
+        suppressHydrationWarning
+        className={`light ${geistSans.variable} ${geistMono.variable} ${newsreader.variable}`}
       >
-        {children}
-      </body>
-    </html>
+        <body
+          className="
+            min-h-screen
+            bg-background
+            font-sans
+            text-foreground
+            antialiased
+            selection:bg-primary/20
+            selection:text-foreground
+          "
+        >
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
