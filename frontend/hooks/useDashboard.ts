@@ -3,26 +3,35 @@
 import { useEffect, useState } from "react";
 import {
   DashboardStats,
+  TodaySummary,
   getDashboardStats,
   getTodaySummary,
 } from "@/lib/dashboard";
 
 export function useDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [summary, setSummary] = useState("");
+
+  const [todayBrief, setTodayBrief] = useState<TodaySummary>({
+    title: "",
+    summary: "",
+    category: "",
+    source: "",
+    published_at: "",
+    link: "",
+  });
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadDashboard() {
       try {
-        const [dashboardStats, todaySummary] = await Promise.all([
+        const [dashboardStats, summary] = await Promise.all([
           getDashboardStats(),
           getTodaySummary(),
         ]);
 
         setStats(dashboardStats);
-        setSummary(todaySummary.summary);
+        setTodayBrief(summary);
       } catch (err) {
         console.error(err);
       } finally {
@@ -35,7 +44,7 @@ export function useDashboard() {
 
   return {
     stats,
-    summary,
+    todayBrief,
     loading,
   };
 }

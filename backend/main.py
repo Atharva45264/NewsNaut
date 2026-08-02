@@ -55,11 +55,25 @@ def stats():
 def today_summary():
     articles = rank_articles()
 
-    if len(articles) == 0:
-        return {"summary": ""}
+    if not articles:
+        return {
+            "title": "",
+            "summary": "",
+            "category": "",
+            "source": "",
+            "published_at": "",
+            "link": "",
+        }
+
+    article = articles[0]
 
     return {
-        "summary": articles[0].get("summary", "")
+        "title": article.get("title"),
+        "summary": article.get("summary_ai"),
+        "category": article.get("category"),
+        "source": article.get("source"),
+        "published_at": article.get("published_at"),
+        "link": article.get("link"),
     }
 
 from app.services.pipeline import run_pipeline

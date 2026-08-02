@@ -6,7 +6,7 @@ import {
   LayoutDashboard,
   Newspaper,
   Bookmark,
-  Bot,
+  PlayCircle,
   Settings,
   PanelLeftClose,
   PanelLeftOpen,
@@ -34,9 +34,9 @@ const navigation = [
     icon: Bookmark,
   },
   {
-    title: "AI Assistant",
-    href: "/dashboard/assistant",
-    icon: Bot,
+    title: "YouTube Tracker",
+    href: "/dashboard/youtube",
+    icon: PlayCircle,
   },
   {
     title: "Settings",
@@ -44,6 +44,7 @@ const navigation = [
     icon: Settings,
   },
 ];
+
 export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
@@ -66,7 +67,7 @@ export function Sidebar() {
           <Image
             src="/newsnaut-logo.png"
             alt="NewsNaut"
-            width={160}
+            width={165}
             height={40}
             className={cn(
               "transition-all duration-300",
@@ -78,8 +79,8 @@ export function Sidebar() {
             <Image
               src="/icon.png"
               alt="NewsNaut"
-              width={40}
-              height={40}
+              width={42}
+              height={42}
             />
           )}
         </Link>
@@ -101,27 +102,37 @@ export function Sidebar() {
 
       <nav className="flex-1 px-4 py-8">
 
-        <p
-          className={cn(
-            "mb-4 px-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground",
-            collapsed && "hidden"
-          )}
-        >
-          Navigation
-        </p>
+        {!collapsed && (
+
+          <div className="mb-6 px-3">
+
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
+              Workspace
+            </p>
+
+            <p className="mt-1 text-xs text-muted-foreground">
+              Your personalized news hub
+            </p>
+
+          </div>
+
+        )}
 
         <div className="space-y-2">
 
           {navigation.map((item) => {
             const Icon = item.icon;
-            const active = pathname === item.href;
+            const active =
+              pathname === item.href ||
+              (item.href !== "/dashboard" &&
+                pathname.startsWith(item.href));
 
             return (
               <Link
                 key={item.title}
                 href={item.href}
                 className={cn(
-                  "group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-all duration-300",
+                  "group flex items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-medium transition-all duration-300",
 
                   active
                     ? "bg-primary text-white shadow-lg shadow-primary/20"
@@ -162,28 +173,32 @@ export function Sidebar() {
           />
 
           {!collapsed && (
+
             <div>
 
               <h4 className="text-sm font-semibold">
-                Welcome 👋
+                Welcome Back 👋
               </h4>
 
               <p className="text-xs text-muted-foreground">
-                Manage your account
+                Stay updated with today's news
               </p>
 
             </div>
+
           )}
 
         </div>
 
         {!collapsed && (
+
           <button
-            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-border py-2 text-sm font-medium transition hover:bg-muted"
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium transition-all hover:bg-muted"
           >
             <LogOut className="h-4 w-4" />
             Logout
           </button>
+
         )}
 
       </div>

@@ -34,6 +34,15 @@ export async function getDashboardStats() {
 }
 
 // Today's AI Summary
+export interface TodaySummary {
+  title: string;
+  summary: string;
+  category: string;
+  source: string;
+  published_at: string;
+  link: string;
+}
+
 export async function getTodaySummary() {
-  return apiFetch<{ summary: string }>("/summary/today");
+  return apiFetch<TodaySummary>("/summary/today");
 }

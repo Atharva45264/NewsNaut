@@ -7,10 +7,19 @@ export interface DashboardStats {
   categories: number;
 }
 
+export interface TodaySummary {
+  title: string;
+  summary: string;
+  category: string;
+  source: string;
+  published_at: string;
+  link: string;
+}
+
 export async function getDashboardStats() {
   return apiFetch<DashboardStats>("/dashboard/stats");
 }
 
 export async function getTodaySummary() {
-  return apiFetch<{ summary: string }>("/summary/today");
+  return apiFetch<TodaySummary>("/summary/today");
 }

@@ -1,5 +1,4 @@
 from app.database.mongo import articles_collection
-import datetime
 
 USER_INTERESTS = [
     "AI",
@@ -10,9 +9,7 @@ USER_INTERESTS = [
 
 
 def rank_articles():
-    today = datetime.datetime.utcnow().date()
-
-    # Only fetch articles that already have an AI summary
+    # Fetch all summarized articles
     articles = list(
         articles_collection.find(
             {
@@ -24,18 +21,9 @@ def rank_articles():
         )
     )
 
-    filtered = []
-
-    # Keep only today's news
-    for article in articles:
-        created = article.get("created_at")
-
-        if created and created.date() == today:
-            filtered.append(article)
-
     ranked = []
 
-    for article in filtered:
+    for article in articles:
         score = 0
 
         title = article.get("title", "")
@@ -49,12 +37,17 @@ def rank_articles():
 
         article["score"] = score
 
-        # Remove MongoDB ObjectId before returning
         article.pop("_id", None)
 
         ranked.append(article)
 
-    # Highest score first
-    ranked.sort(key=lambda x: x["score"], reverse=True)
+    # Sort by score first, newest article second
+    ranked.sort(
+        key=lambda x: (
+            x["score"],
+            x.get("created_at")
+        ),
+        reverse=True,
+    )
 
     return ranked
