@@ -9,11 +9,7 @@ interface NewsGridProps {
   error: string;
 }
 
-export function NewsGrid({
-  articles,
-  loading,
-  error,
-}: NewsGridProps) {
+export function NewsGrid({ articles, loading, error }: NewsGridProps) {
   if (loading) {
     return (
       <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
@@ -34,9 +30,7 @@ export function NewsGrid({
           Failed to load news
         </h2>
 
-        <p className="mt-2 text-red-500">
-          {error}
-        </p>
+        <p className="mt-2 text-red-500">{error}</p>
       </div>
     );
   }
@@ -44,30 +38,28 @@ export function NewsGrid({
   if (articles.length === 0) {
     return (
       <div className="rounded-3xl border border-border p-16 text-center">
+        <h2 className="text-2xl font-semibold">Nothing to show</h2>
 
-        <h2 className="text-2xl font-semibold">
-          No Articles Found
-        </h2>
+        <p className="mt-3 text-muted-foreground">
+          Try another search or save some articles first.
+        </p>
 
         <p className="mt-3 text-muted-foreground">
           Try changing your search or category filter.
         </p>
-
       </div>
     );
   }
 
   return (
     <section>
-
-      <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {articles.map((article) => (
           <NewsCard
             key={article.link}
             id={article.link}
             title={article.title}
-            summary={article.content}
+            summary={article.summary || article.content || ""}
             image={article.image}
             category={article.category}
             source={article.source}
@@ -75,9 +67,7 @@ export function NewsGrid({
             articleUrl={article.link}
           />
         ))}
-
       </div>
-
     </section>
   );
 }

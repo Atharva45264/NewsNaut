@@ -18,16 +18,19 @@ def add_bookmark(user_id: str, link: str):
         return {"error": "Article not found"}
 
     bookmark = {
-        "userId": user_id,
-        "title": article.get("title"),
-        "link": article.get("link"),
-        "image": article.get("image"),
-        "summary_ai": article.get("summary_ai"),
-        "source": article.get("source"),
-        "category": article.get("category"),
-        "published_at": article.get("published_at"),
-        "createdAt": datetime.utcnow()
-    }
+    "userId": user_id,
+    "title": article.get("title"),
+    "link": article.get("link"),
+    "image": article.get("image"),
+
+    "summary": article.get("summary_ai"),
+    "content": article.get("content"),
+
+    "source": article.get("source"),
+    "category": article.get("category"),
+    "published_at": article.get("published_at"),
+    "createdAt": datetime.utcnow()
+}
 
     result = bookmarks_collection.insert_one(bookmark)
 

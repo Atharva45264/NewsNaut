@@ -32,7 +32,7 @@ export default function NewsPage() {
   }, [articles, search, category]);
 
   return (
-    <div className="space-y-10">
+    <div className="w-full min-w-0 space-y-10">
 
       {/* Header */}
 

@@ -13,10 +13,10 @@ export function TrendingStrip({
 }: TrendingStripProps) {
   const trending = articles.slice(0, 8);
 
-  if (trending.length === 0) return null;
+  if (!trending.length) return null;
 
   return (
-    <section className="rounded-3xl border border-border bg-background p-6 shadow-sm">
+    <section className="w-full overflow-hidden rounded-3xl border border-border bg-background p-6 shadow-sm">
 
       <div className="mb-5 flex items-center gap-3">
 
@@ -38,14 +38,14 @@ export function TrendingStrip({
 
       </div>
 
-      <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+      <div className="flex w-full gap-4 overflow-x-auto pb-2 scrollbar-hide">
 
         {trending.map((article) => (
           <Link
             key={article.link}
             href={article.link}
             target="_blank"
-            className="min-w-[320px] rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:shadow-lg"
+            className="w-72 flex-shrink-0 rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:shadow-lg"
           >
             <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold capitalize text-primary">
               {article.category}

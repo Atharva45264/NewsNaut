@@ -3,6 +3,7 @@ import { apiFetch } from "./api";
 export interface Article {
   title: string;
   link: string;
+  summary?: string;
   content: string;
   category: string;
   source: string;

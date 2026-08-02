@@ -52,7 +52,7 @@ export function Sidebar() {
     <aside
       className={cn(
         "hidden border-r border-border bg-background transition-all duration-300 lg:flex lg:flex-col",
-        collapsed ? "w-24" : "w-72"
+        collapsed ? "w-40" : "w-72"
       )}
     >
       {/* Logo */}

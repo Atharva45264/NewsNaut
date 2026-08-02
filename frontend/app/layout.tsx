@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import { Toaster } from "sonner";
 
 import "./globals.css";
 
@@ -169,6 +170,11 @@ export default function RootLayout({
           "
         >
           {children}
+          <Toaster
+  position="bottom-right"
+  richColors
+  closeButton
+/>
         </body>
       </html>
     </ClerkProvider>
