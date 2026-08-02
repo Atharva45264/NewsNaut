@@ -1,26 +1,31 @@
 "use client";
 
 import { Search, SlidersHorizontal, X } from "lucide-react";
-import { useState } from "react";
 
-export function SearchBar() {
-  const [query, setQuery] = useState("");
+interface SearchBarProps {
+  value: string;
+  onChange: (value: string) => void;
+}
 
+export function SearchBar({
+  value,
+  onChange,
+}: SearchBarProps) {
   return (
     <section className="rounded-3xl border border-border bg-background p-5 shadow-sm">
 
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
 
-        {/* Search Input */}
+        {/* Search */}
 
         <div className="relative flex-1">
 
           <Search className="absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
 
           <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search articles, topics, authors, AI, technology..."
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="Search articles, topics, publishers..."
             className="
               h-14
               w-full
@@ -40,9 +45,9 @@ export function SearchBar() {
             "
           />
 
-          {query.length > 0 && (
+          {value.length > 0 && (
             <button
-              onClick={() => setQuery("")}
+              onClick={() => onChange("")}
               className="absolute right-4 top-1/2 -translate-y-1/2 rounded-lg p-1 transition hover:bg-muted"
             >
               <X className="h-4 w-4" />
@@ -51,7 +56,17 @@ export function SearchBar() {
 
         </div>
 
-        {/* Filters */}
+        {/* Results */}
+
+        <div className="hidden rounded-2xl border border-border bg-muted/30 px-5 py-3 lg:block">
+
+          <p className="text-sm font-medium text-muted-foreground">
+            Live Search
+          </p>
+
+        </div>
+
+        {/* Future Filters */}
 
         <button
           className="
@@ -64,7 +79,6 @@ export function SearchBar() {
             border
             border-border
             px-6
-            font-medium
             transition-all
             duration-300
             hover:border-primary
@@ -73,7 +87,6 @@ export function SearchBar() {
           "
         >
           <SlidersHorizontal className="h-5 w-5" />
-
           Filters
         </button>
 
