@@ -3,121 +3,243 @@ import feedparser
 from bs4 import BeautifulSoup
 from app.utils.image_extractor import extract_article_image
 
-# ==============================
-# CATEGORY DETECTOR
-# ==============================
-
 
 def detect_category(title, content):
     text = f"{title} {content}".lower()
 
-    # 🏛️ Politics
-    politics_keywords = [
-        "government",
-        "minister",
-        "parliament",
-        "policy",
-        "election",
-        "bjp",
-        "congress",
-        "modi",
-        "rahul gandhi",
-        "foreign policy",
-        "defence",
-        "defense",
-        "budget",
-        "supreme court",
-        "high court",
-        "cabinet",
-        "lok sabha",
-        "rajya sabha",
-    ]
+    category_keywords = {
+        "ai": [
+            "artificial intelligence",
+            "machine learning",
+            "deep learning",
+            "llm",
+            "chatgpt",
+            "openai",
+            "gemini",
+            "claude",
+            "anthropic",
+            "grok",
+            "copilot",
+            "perplexity",
+            "robotics",
+            "automation",
+            "nvidia",
+            "deepmind",
+            "transformer",
+            "hugging face",
+            "generative ai",
+        ],
+        "politics": [
+            "government",
+            "minister",
+            "parliament",
+            "policy",
+            "election",
+            "bjp",
+            "congress",
+            "modi",
+            "rahul gandhi",
+            "cabinet",
+            "supreme court",
+            "lok sabha",
+            "rajya sabha",
+            "budget",
+        ],
+        "sports": [
+            "cricket",
+            "football",
+            "ipl",
+            "fifa",
+            "goal",
+            "match",
+            "rohit",
+            "virat",
+            "dhoni",
+            "bumrah",
+            "jadeja",
+            "wimbledon",
+            "olympics",
+            "badminton",
+            "hockey",
+        ],
+        "health": [
+            "health",
+            "hospital",
+            "doctor",
+            "medical",
+            "medicine",
+            "covid",
+            "virus",
+            "vaccine",
+            "disease",
+            "fitness",
+            "wellness",
+            "nutrition",
+            "who",
+            "mental health",
+        ],
+        "education": [
+            "education",
+            "student",
+            "students",
+            "school",
+            "schools",
+            "college",
+            "university",
+            "exam",
+            "exams",
+            "cbse",
+            "icse",
+            "ugc",
+            "neet",
+            "jee",
+            "syllabus",
+            "admission",
+            "learning",
+        ],
+        "food": [
+            "food",
+            "restaurant",
+            "recipe",
+            "chef",
+            "nutrition",
+            "diet",
+            "fssai",
+            "cuisine",
+            "cooking",
+            "meal",
+        ],
+        "entertainment": [
+            "movie",
+            "film",
+            "bollywood",
+            "hollywood",
+            "actor",
+            "actress",
+            "ott",
+            "netflix",
+            "amazon prime",
+            "music",
+            "celebrity",
+            "trailer",
+            "cinema",
+        ],
+        "business": [
+            "business",
+            "startup",
+            "economy",
+            "economic",
+            "stock",
+            "stocks",
+            "market",
+            "markets",
+            "sensex",
+            "nifty",
+            "rbi",
+            "reserve bank",
+            "sebi",
+            "gdp",
+            "inflation",
+            "bank",
+            "banking",
+            "investment",
+            "investor",
+            "company",
+            "companies",
+            "ipo",
+            "finance",
+            "financial",
+            "profit",
+            "revenue",
+            "share",
+            "shares",
+        ],
+        "science": [
+            "science",
+            "research",
+            "nasa",
+            "space",
+            "scientist",
+            "experiment",
+            "discovery",
+            "astronomy",
+            "physics",
+            "biology",
+            "chemistry",
+        ],
+        "world": [
+            "usa",
+            "united states",
+            "china",
+            "russia",
+            "ukraine",
+            "israel",
+            "iran",
+            "pakistan",
+            "afghanistan",
+            "global",
+            "international",
+            "foreign",
+            "world",
+            "united nations",
+            "eu",
+        ],
+    }
 
-    # ⚽ Sports
-    sports_keywords = [
-        "cricket",
-        "football",
-        "ipl",
-        "fifa",
-        "goal",
-        "match",
-        "rohit",
-        "virat",
-        "dhoni",
-        "ashwin",
-        "bumrah",
-        "jadeja",
-        "test",
-        "odi",
-        "t20",
-        "wimbledon",
-        "olympics",
-        "badminton",
-        "hockey",
-    ]
+    words = set(text.split())
 
-    # 🤖 AI & Technology
-    ai_keywords = [
-        "artificial intelligence",
-        "ai",
-        "machine learning",
-        "deep learning",
-        "neural network",
-        "llm",
-        "chatgpt",
-        "openai",
-        "anthropic",
-        "claude",
-        "gemini",
-        "google ai",
-        "meta ai",
-        "grok",
-        "copilot",
-        "perplexity",
-        "cursor",
-        "midjourney",
-        "stable diffusion",
-        "hugging face",
-        "transformer",
-        "generative ai",
-        "robotics",
-        "automation",
-        "ai startup",
-        "ai model",
-        "large language model",
-        "nvidia",
-        "microsoft ai",
-        "deepmind",
-    ]
+    scores = {}
 
-    if any(keyword in text for keyword in sports_keywords):
-        return "sports"
+    for category, keywords in category_keywords.items():
 
-    if any(keyword in text for keyword in politics_keywords):
-        return "politics"
+        score = 0
 
-    if any(keyword in text for keyword in ai_keywords):
-        return "ai"
+        for keyword in keywords:
 
-    return None
+            if " " in keyword:
+                if keyword in text:
+                    score += 1
+            else:
+                if keyword in words:
+                    score += 1
+
+        if score:
+            scores[category] = score
+
+    if not scores:
+        return None
+
+    return max(scores, key=scores.get)
 
 
 # ==============================
 # RSS SCRAPER
 # ==============================
 
+
 def fetch_news():
     feeds = [
-        # India News
+        # 🇮🇳 India
         "https://timesofindia.indiatimes.com/rssfeedstopstories.cms",
         "https://www.thehindu.com/news/national/feeder/default.rss",
-
-        # AI & Technology
+        # 🤖 AI
         "https://analyticsindiamag.com/feed/",
         "https://www.marktechpost.com/feed/",
-        "https://www.artificialintelligence-news.com/feed/",
         "https://techcrunch.com/category/artificial-intelligence/feed/",
         "https://venturebeat.com/category/ai/feed/",
+        # 💼 Business
+        "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",
+        "https://www.moneycontrol.com/rss/business.xml",
+        # ❤️ Health
+        "https://www.medicalnewstoday.com/rss",
+        # 🎓 Education
+        "https://www.indiatoday.in/education-today/rss",
+        # 🍔 Food
+        "https://www.seriouseats.com/rss",
+        # 🎬 Entertainment
+        "https://www.bollywoodhungama.com/feed/",
+        # 🔬 Science
+        "https://www.sciencedaily.com/rss/all.xml",
     ]
 
     articles = []
@@ -132,11 +254,7 @@ def fetch_news():
             if feed.bozo:
                 print(f"⚠️ Couldn't parse: {url}")
 
-            source = (
-                feed.feed.get("title", "Unknown Source")
-                .split("|")[-1]
-                .strip()
-            )
+            source = feed.feed.get("title", "Unknown Source").split("|")[-1].strip()
 
             for entry in feed.entries:
 
@@ -144,11 +262,7 @@ def fetch_news():
                 content = entry.get("summary", "")
                 link = entry.get("link", "").strip()
 
-                published = (
-                    entry.get("published")
-                    or entry.get("updated")
-                    or ""
-                )
+                published = entry.get("published") or entry.get("updated") or ""
 
                 author = entry.get("author", "")
 
@@ -162,12 +276,16 @@ def fetch_news():
 
                 category = detect_category(title, content)
 
+                print("=" * 60)
+                print(title)
+                print("Detected:", category)
+
                 if not category:
                     continue
 
                 text = f"{title} {content}".lower()
 
-                if category != "ai":
+                if category not in ["ai", "business", "science", "world"]:
                     india_keywords = [
                         "india",
                         "indian",
