@@ -5,6 +5,7 @@ from app.services.get_articles import get_articles
 from fastapi.middleware.cors import CORSMiddleware
 from app.services.dashboard import dashboard_stats
 from app.routes.bookmarks import router as bookmark_router
+from app.youtube.routes import router as youtube_router
 
 app = FastAPI()
 
@@ -92,3 +93,5 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(youtube_router)
