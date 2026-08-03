@@ -26,7 +26,7 @@ export default function BookmarksPage() {
 
     async function loadBookmarks() {
       try {
-        const data = await getBookmarks(user.id);
+        const data = await getBookmarks(user!.id);
         setArticles(data);
       } catch {
         setError("Failed to load bookmarks.");
