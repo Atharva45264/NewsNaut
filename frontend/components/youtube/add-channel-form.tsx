@@ -1,22 +1,55 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, PlayCircle, AlertCircle } from "lucide-react";
+import {
+  Plus,
+  PlayCircle,
+  AlertCircle,
+} from "lucide-react";
+import { toast } from "sonner";
+
+import { useYoutube } from "@/hooks/useYoutube";
 
 export function AddChannelForm() {
+  const {
+    channels,
+    createChannel,
+    saving,
+  } = useYoutube();
+
   const [url, setUrl] = useState("");
 
   const isValidYoutube =
     url === "" ||
     /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//.test(url);
 
+  const reachedLimit = channels.length >= 3;
+
+  async function handleSubmit() {
+    if (!url || !isValidYoutube || reachedLimit) return;
+
+    const success = await createChannel(url);
+
+    if (success) {
+      toast.success("Channel added successfully!");
+
+      setUrl("");
+    } else {
+      toast.error("Unable to add channel.");
+    }
+  }
+
   return (
     <section className="rounded-3xl border border-border bg-background p-8 shadow-sm">
+
+      {/* Header */}
 
       <div className="flex items-center gap-3">
 
         <div className="rounded-2xl bg-red-500/10 p-3">
+
           <PlayCircle className="h-6 w-6 text-red-600" />
+
         </div>
 
         <div>
@@ -26,14 +59,19 @@ export function AddChannelForm() {
           </h2>
 
           <p className="text-muted-foreground">
-            Track up to <span className="font-semibold">3 YouTube channels</span>.
-            Every new upload will be summarized by AI and included in your daily
-            NewsNaut email.
+            Track up to{" "}
+            <span className="font-semibold">
+              3 YouTube channels
+            </span>
+            . Every new upload will be summarized by AI and
+            included in your NewsNaut daily email.
           </p>
 
         </div>
 
       </div>
+
+      {/* Input */}
 
       <div className="mt-8 space-y-5">
 
@@ -65,6 +103,8 @@ export function AddChannelForm() {
 
         </div>
 
+        {/* Invalid URL */}
+
         {!isValidYoutube && (
 
           <div className="flex items-center gap-2 rounded-xl bg-red-50 p-3 text-sm text-red-600">
@@ -77,16 +117,53 @@ export function AddChannelForm() {
 
         )}
 
+        {/* Limit */}
+
+        {reachedLimit && (
+
+          <div className="flex items-center gap-2 rounded-xl bg-amber-50 p-3 text-sm text-amber-700">
+
+            <AlertCircle className="h-4 w-4" />
+
+            You've reached the maximum limit of 3 channels.
+
+          </div>
+
+        )}
+
+        {/* Footer */}
+
         <div className="flex items-center justify-between">
 
-          <p className="text-sm text-muted-foreground">
+          <div>
 
-            0 / 3 Channels Added
+            <p className="text-sm font-medium">
 
-          </p>
+              {channels.length} / 3 Channels Added
+
+            </p>
+
+            <div className="mt-2 h-2 w-48 overflow-hidden rounded-full bg-muted">
+
+              <div
+                className="h-full rounded-full bg-red-600 transition-all"
+                style={{
+                  width: `${(channels.length / 3) * 100}%`,
+                }}
+              />
+
+            </div>
+
+          </div>
 
           <button
-            disabled={!url || !isValidYoutube}
+            onClick={handleSubmit}
+            disabled={
+              !url ||
+              !isValidYoutube ||
+              reachedLimit ||
+              saving
+            }
             className="
               inline-flex
               items-center
@@ -106,7 +183,7 @@ export function AddChannelForm() {
 
             <Plus className="h-5 w-5" />
 
-            Add Channel
+            {saving ? "Adding..." : "Add Channel"}
 
           </button>
 

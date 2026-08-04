@@ -15,6 +15,7 @@ interface ChannelCardProps {
   latestVideo: string;
   uploadedAt: string;
   summaryReady: boolean;
+  onRemove: () => void;
 }
 
 export function ChannelCard({
@@ -24,6 +25,7 @@ export function ChannelCard({
   latestVideo,
   uploadedAt,
   summaryReady,
+  onRemove,
 }: ChannelCardProps) {
   return (
     <article className="rounded-3xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
@@ -113,24 +115,25 @@ export function ChannelCard({
       {/* Remove */}
 
       <button
-        className="
-          mt-6
-          flex
-          w-full
-          items-center
-          justify-center
-          gap-2
-          rounded-2xl
-          border
-          border-red-200
-          py-3
-          text-sm
-          font-medium
-          text-red-600
-          transition-all
-          hover:bg-red-50
-        "
-      >
+  onClick={onRemove}
+  className="
+    mt-6
+    flex
+    w-full
+    items-center
+    justify-center
+    gap-2
+    rounded-2xl
+    border
+    border-red-200
+    py-3
+    text-sm
+    font-medium
+    text-red-600
+    transition-all
+    hover:bg-red-50
+  "
+>
 
         <Trash2 className="h-4 w-4" />
 

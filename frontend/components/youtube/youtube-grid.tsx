@@ -1,30 +1,48 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
+
+import { useYoutube } from "@/hooks/useYoutube";
+
 import { ChannelCard } from "./channel-card";
 import { EmptyState } from "./empty-state";
 
-const demoChannels = [
-  {
-    name: "Fireship",
-    handle: "fireship",
-    thumbnail: "https://yt3.googleusercontent.com/ytc-demo1",
-    latestVideo: "AI Agents Explained in 100 Seconds",
-    uploadedAt: "2 hours ago",
-    summaryReady: true,
-  },
-  {
-    name: "AI Explained",
-    handle: "aiexplained",
-    thumbnail: "https://yt3.googleusercontent.com/ytc-demo2",
-    latestVideo: "Claude vs Gemini vs GPT-5",
-    uploadedAt: "Yesterday",
-    summaryReady: true,
-  },
-];
+function getChannelName(url: string) {
+  const match = url.match(/@([^/?]+)/);
+
+  if (match) {
+    return match[1]
+      .replace(/[-_]/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+
+  return "YouTube Channel";
+}
+
+function getHandle(url: string) {
+  const match = url.match(/@([^/?]+)/);
+
+  if (match) {
+    return match[1];
+  }
+
+  return "channel";
+}
 
 export function YoutubeGrid() {
+  const {
+    channels,
+    loading,
+    deleteChannel,
+  } = useYoutube();
 
-  const channels = demoChannels;
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   if (channels.length === 0) {
     return <EmptyState />;
@@ -53,8 +71,14 @@ export function YoutubeGrid() {
 
         {channels.map((channel) => (
           <ChannelCard
-            key={channel.handle}
-            {...channel}
+            key={channel._id}
+            name={getChannelName(channel.url)}
+            handle={getHandle(channel.url)}
+            thumbnail="/youtube-placeholder.png"
+            latestVideo="Latest upload will appear after YouTube integration."
+            uploadedAt="Not synced yet"
+            summaryReady={false}
+            onRemove={() => deleteChannel(channel.url)}
           />
         ))}
 
