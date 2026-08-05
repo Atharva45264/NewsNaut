@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+
+load_dotenv()
 from fastapi import FastAPI
 from app.scrapers.rss_scraper import fetch_news
 from app.services.save_articles import save_articles

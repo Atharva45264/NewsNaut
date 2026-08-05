@@ -2,8 +2,21 @@ import { apiFetch } from "./api";
 
 export interface YoutubeChannel {
   _id: string;
+
   userId: string;
+
   url: string;
+
+  channelId: string;
+
+  channelName: string;
+
+  handle: string;
+
+  thumbnail: string;
+
+  description: string;
+
   createdAt: string;
 }
 

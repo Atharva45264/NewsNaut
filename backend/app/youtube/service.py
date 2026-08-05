@@ -1,23 +1,27 @@
 from datetime import datetime
-from app.database.mongo import youtube_collection
-from app.youtube.youtube_api import get_channel_details
 
+from app.database.mongo import youtube_collection
+
+from app.youtube.youtube_api import (
+    get_channel_details,
+    get_latest_video,
+)
 
 MAX_CHANNELS = 3
 
 
 def add_channel(user_id: str, url: str):
-    # Check if already exists
+    # Check if channel already exists
     existing = youtube_collection.find_one({
         "userId": user_id,
-        "url": url
+        "url": url,
     })
 
     if existing:
         existing["_id"] = str(existing["_id"])
         return existing
 
-    # Check limit
+    # Maximum 3 channels per user
     count = youtube_collection.count_documents({
         "userId": user_id
     })
@@ -27,25 +31,33 @@ def add_channel(user_id: str, url: str):
             "error": "Maximum of 3 channels allowed."
         }
 
+    # Fetch channel details
     details = get_channel_details(url)
 
+    # Fetch latest uploaded video
+    latest_video = get_latest_video(
+        details["channelId"]
+    )
+
     channel = {
-    "userId": user_id,
+        "userId": user_id,
 
-    "url": url,
+        "url": url,
 
-    "channelId": details["channelId"],
+        "channelId": details["channelId"],
 
-    "channelName": details["channelName"],
+        "channelName": details["channelName"],
 
-    "handle": details["handle"],
+        "handle": details["handle"],
 
-    "thumbnail": details["thumbnail"],
+        "thumbnail": details["thumbnail"],
 
-    "description": details["description"],
+        "description": details["description"],
 
-    "createdAt": datetime.utcnow(),
-}
+        "latestVideo": latest_video,
+
+        "createdAt": datetime.utcnow(),
+    }
 
     result = youtube_collection.insert_one(channel)
 
@@ -70,7 +82,7 @@ def get_channels(user_id: str):
 def remove_channel(user_id: str, url: str):
     result = youtube_collection.delete_one({
         "userId": user_id,
-        "url": url
+        "url": url,
     })
 
     return {

@@ -73,8 +73,8 @@ export function YoutubeGrid() {
           <ChannelCard
             key={channel._id}
             name={getChannelName(channel.url)}
-            handle={getHandle(channel.url)}
-            thumbnail="/youtube-placeholder.png"
+            handle={channel.handle}
+            thumbnail={channel.thumbnail}
             latestVideo="Latest upload will appear after YouTube integration."
             uploadedAt="Not synced yet"
             summaryReady={false}

@@ -1,7 +1,12 @@
 import requests
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+print("API KEY:", YOUTUBE_API_KEY)
 
 
 def get_channel_details(channel_url: str):
@@ -54,4 +59,51 @@ def get_channel_details(channel_url: str):
         "handle": handle,
         "thumbnail": snippet["thumbnails"]["high"]["url"],
         "description": snippet["description"],
+    }
+    
+def get_latest_video(channel_id: str):
+    """
+    Returns latest uploaded video from a channel.
+    """
+
+    search_url = (
+        "https://www.googleapis.com/youtube/v3/search"
+    )
+
+    params = {
+        "part": "snippet",
+        "channelId": channel_id,
+        "maxResults": 1,
+        "order": "date",
+        "type": "video",
+        "key": YOUTUBE_API_KEY,
+    }
+
+    response = requests.get(
+        search_url,
+        params=params,
+        timeout=15,
+    )
+
+    print(response.status_code)
+    print(response.text)
+
+    response.raise_for_status()   
+
+    data = response.json()
+
+    items = data.get("items", [])
+
+    if not items:
+        return None
+
+    video = items[0]
+
+    snippet = video["snippet"]
+
+    return {
+        "videoId": video["id"]["videoId"],
+        "title": snippet["title"],
+        "thumbnail": snippet["thumbnails"]["high"]["url"],
+        "publishedAt": snippet["publishedAt"],
     }
