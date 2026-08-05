@@ -17,13 +17,20 @@ export interface YoutubeChannel {
 
   description: string;
 
+  latestVideo: {
+    videoId: string;
+    title: string;
+    thumbnail: string;
+    publishedAt: string;
+    summary: string;
+    summaryGenerated: boolean;
+};
+
   createdAt: string;
 }
 
 export async function getChannels(userId: string) {
-  return apiFetch<YoutubeChannel[]>(
-    `/youtube/${userId}`
-  );
+  return apiFetch<YoutubeChannel[]>(`/youtube/${userId}`);
 }
 
 export async function addChannel(

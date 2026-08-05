@@ -36,8 +36,12 @@ def add_channel(user_id: str, url: str):
 
     # Fetch latest uploaded video
     latest_video = get_latest_video(
-        details["channelId"]
-    )
+    details["channelId"]
+)
+
+    if latest_video:
+      latest_video["summary"] = ""
+      latest_video["summaryGenerated"] = False
 
     channel = {
         "userId": user_id,

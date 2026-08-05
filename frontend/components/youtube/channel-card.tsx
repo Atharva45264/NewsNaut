@@ -1,20 +1,31 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import {
-  PlayCircle,
   Trash2,
-  Clock3,
   CheckCircle2,
+  Sparkles,
   Mail,
+  Clock3,
+  PlayCircle,
 } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 interface ChannelCardProps {
   name: string;
   handle: string;
   thumbnail: string;
+  description: string;
+
   latestVideo: string;
+  videoThumbnail: string;
   uploadedAt: string;
+  videoId: string;
+
+  summary: string;
   summaryReady: boolean;
+
   onRemove: () => void;
 }
 
@@ -22,49 +33,98 @@ export function ChannelCard({
   name,
   handle,
   thumbnail,
+  description,
   latestVideo,
+  videoThumbnail,
   uploadedAt,
+  videoId,
+  summary,
   summaryReady,
   onRemove,
 }: ChannelCardProps) {
   return (
-    <article className="rounded-3xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+    <article className="group overflow-hidden rounded-3xl border border-border bg-background shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-red-500/20 hover:shadow-xl">
 
-      {/* Channel */}
+      {/* Header */}
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-start gap-4 p-6">
 
-        <img
+        <Image
           src={thumbnail}
           alt={name}
-          className="h-16 w-16 rounded-2xl object-cover"
+          width={72}
+          height={72}
+          className="rounded-2xl object-cover"
         />
 
         <div className="flex-1">
 
-          <h3 className="text-xl font-semibold">
-            {name}
-          </h3>
+          <div className="flex items-center justify-between">
 
-          <p className="text-sm text-muted-foreground">
-            @{handle}
+            <div>
+
+              <h2 className="text-xl font-bold">
+                {name}
+              </h2>
+
+              <p className="text-sm text-muted-foreground">
+                @{handle}
+              </p>
+
+            </div>
+
+            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+              ✓ Tracking
+            </span>
+
+          </div>
+
+          <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
+            {description}
           </p>
 
         </div>
 
-        <PlayCircle className="h-8 w-8 text-red-600" />
-
       </div>
 
-      {/* Latest Upload */}
+      {/* Latest Video */}
 
-      <div className="mt-6 rounded-2xl bg-muted/30 p-4">
+      <div className="border-y border-border p-6">
 
-        <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-          Latest Upload
-        </p>
+        <div className="mb-4 flex items-center justify-between">
 
-        <h4 className="mt-2 line-clamp-2 font-semibold">
+          <h3 className="font-semibold">
+            Latest Upload
+          </h3>
+
+          <Link
+            href={`https://www.youtube.com/watch?v=${videoId}`}
+            target="_blank"
+            className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-red-700"
+          >
+            <PlayCircle className="h-4 w-4" />
+            Watch
+          </Link>
+
+        </div>
+
+        <Link
+          href={`https://www.youtube.com/watch?v=${videoId}`}
+          target="_blank"
+          className="block overflow-hidden rounded-2xl"
+        >
+
+          <Image
+            src={videoThumbnail}
+            alt={latestVideo}
+            width={800}
+            height={450}
+            className="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+
+        </Link>
+
+        <h4 className="mt-5 line-clamp-2 text-lg font-semibold">
           {latestVideo}
         </h4>
 
@@ -72,74 +132,103 @@ export function ChannelCard({
 
           <Clock3 className="h-4 w-4" />
 
-          {uploadedAt}
+          {formatDistanceToNow(
+            new Date(uploadedAt),
+            {
+              addSuffix: true,
+            }
+          )}
 
         </div>
 
       </div>
 
-      {/* Status */}
+      {/* AI Summary */}
 
-      <div className="mt-5 space-y-3">
+      <div className="space-y-4 p-6">
 
-        <div className="flex items-center gap-2">
+        <div className="rounded-2xl bg-muted/40 p-5">
 
-          <CheckCircle2
-            className={`h-5 w-5 ${
-              summaryReady
-                ? "text-green-600"
-                : "text-orange-500"
-            }`}
-          />
+          <div className="mb-3 flex items-center gap-2">
 
-          <span className="text-sm font-medium">
+            <Sparkles className="h-5 w-5 text-red-600" />
 
-            {summaryReady
-              ? "AI Summary Ready"
-              : "Waiting for next summary"}
+            <h4 className="font-semibold">
+              AI Summary
+            </h4>
 
-          </span>
+          </div>
+
+          {summaryReady ? (
+
+            <p className="line-clamp-4 text-sm leading-7 text-muted-foreground">
+              {summary}
+            </p>
+
+          ) : (
+
+            <p className="text-sm leading-7 text-muted-foreground">
+              Summary will be generated automatically after the next daily sync.
+            </p>
+
+          )}
 
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        {/* Email Status */}
 
-          <Mail className="h-4 w-4" />
+        <div className="flex items-center gap-3 rounded-2xl bg-blue-50 p-4">
 
-          Included in daily email digest
+          <Mail className="h-5 w-5 text-blue-600" />
+
+          <div>
+
+            <p className="font-medium">
+              Daily Email Digest
+            </p>
+
+            <p className="text-sm text-muted-foreground">
+              This channel is included in your NewsNaut email.
+            </p>
+
+          </div>
 
         </div>
+
+        {/* Monitoring */}
+
+        <div className="flex items-center gap-3 rounded-2xl bg-green-50 p-4">
+
+          <CheckCircle2 className="h-5 w-5 text-green-600" />
+
+          <div>
+
+            <p className="font-medium text-green-700">
+              Active Monitoring
+            </p>
+
+            <p className="text-sm text-green-600">
+              New uploads are checked automatically every day.
+            </p>
+
+          </div>
+
+        </div>
+
+        {/* Remove */}
+
+        <button
+          onClick={onRemove}
+          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-red-200 py-3 font-medium text-red-600 transition-all hover:bg-red-50"
+        >
+
+          <Trash2 className="h-5 w-5" />
+
+          Remove Channel
+
+        </button>
 
       </div>
-
-      {/* Remove */}
-
-      <button
-  onClick={onRemove}
-  className="
-    mt-6
-    flex
-    w-full
-    items-center
-    justify-center
-    gap-2
-    rounded-2xl
-    border
-    border-red-200
-    py-3
-    text-sm
-    font-medium
-    text-red-600
-    transition-all
-    hover:bg-red-50
-  "
->
-
-        <Trash2 className="h-4 w-4" />
-
-        Remove Channel
-
-      </button>
 
     </article>
   );

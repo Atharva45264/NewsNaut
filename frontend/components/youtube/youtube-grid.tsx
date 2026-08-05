@@ -30,11 +30,7 @@ function getHandle(url: string) {
 }
 
 export function YoutubeGrid() {
-  const {
-    channels,
-    loading,
-    deleteChannel,
-  } = useYoutube();
+  const { channels, loading, deleteChannel } = useYoutube();
 
   if (loading) {
     return (
@@ -50,40 +46,34 @@ export function YoutubeGrid() {
 
   return (
     <section>
-
       <div className="mb-6 flex items-center justify-between">
-
         <div>
-
-          <h2 className="text-2xl font-semibold">
-            Your Channels
-          </h2>
+          <h2 className="text-2xl font-semibold">Your Channels</h2>
 
           <p className="text-muted-foreground">
             {channels.length} of 3 channels added
           </p>
-
         </div>
-
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-
         {channels.map((channel) => (
           <ChannelCard
             key={channel._id}
-            name={getChannelName(channel.url)}
+            name={channel.channelName}
             handle={channel.handle}
             thumbnail={channel.thumbnail}
-            latestVideo="Latest upload will appear after YouTube integration."
-            uploadedAt="Not synced yet"
-            summaryReady={false}
+            description={channel.description}
+            latestVideo={channel.latestVideo.title}
+            videoThumbnail={channel.latestVideo.thumbnail}
+            uploadedAt={channel.latestVideo.publishedAt}
+            videoId={channel.latestVideo.videoId}
+            summary={channel.latestVideo.summary}
+            summaryReady={channel.latestVideo.summaryGenerated}
             onRemove={() => deleteChannel(channel.url)}
           />
         ))}
-
       </div>
-
     </section>
   );
 }
