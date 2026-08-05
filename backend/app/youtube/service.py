@@ -1,5 +1,6 @@
 from datetime import datetime
 from app.database.mongo import youtube_collection
+from app.youtube.youtube_api import get_channel_details
 
 
 MAX_CHANNELS = 3
@@ -26,11 +27,25 @@ def add_channel(user_id: str, url: str):
             "error": "Maximum of 3 channels allowed."
         }
 
+    details = get_channel_details(url)
+
     channel = {
-        "userId": user_id,
-        "url": url,
-        "createdAt": datetime.utcnow()
-    }
+    "userId": user_id,
+
+    "url": url,
+
+    "channelId": details["channelId"],
+
+    "channelName": details["channelName"],
+
+    "handle": details["handle"],
+
+    "thumbnail": details["thumbnail"],
+
+    "description": details["description"],
+
+    "createdAt": datetime.utcnow(),
+}
 
     result = youtube_collection.insert_one(channel)
 
