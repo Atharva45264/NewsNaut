@@ -29,6 +29,7 @@ jobs:
       - name: Run NewsNaut Pipeline
         env:
           MONGO_URL: ${{ secrets.MONGO_URL }}
+          DB_NAME: ${{ secrets.DB_NAME }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
