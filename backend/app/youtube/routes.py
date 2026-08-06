@@ -7,9 +7,11 @@ from app.youtube.service import (
     remove_channel,
 )
 
+from app.youtube.sync import sync_channels
+
 router = APIRouter(
     prefix="/youtube",
-    tags=["YouTube Tracker"]
+    tags=["YouTube Tracker"],
 )
 
 
@@ -25,7 +27,6 @@ class DeleteChannelRequest(BaseModel):
 
 @router.post("/")
 def create_channel(request: AddChannelRequest):
-
     result = add_channel(
         request.userId,
         request.url,
@@ -38,6 +39,11 @@ def create_channel(request: AddChannelRequest):
         )
 
     return result
+
+
+@router.get("/sync")
+def sync_youtube_channels():
+    return sync_channels()
 
 
 @router.get("/{user_id}")
