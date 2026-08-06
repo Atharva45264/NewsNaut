@@ -6,6 +6,7 @@ import {
   Search,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { HeroBackground } from "@/components/landing/hero-background"
 
 const features = [
   "AI Summaries",
@@ -20,12 +21,13 @@ export function Hero() {
       id="top"
       className="relative overflow-hidden pt-28 md:pt-36"
     >
+      <HeroBackground />
       {/* Background Glow */}
       <div className="absolute inset-x-0 top-0 -z-10 flex justify-center">
         <div className="h-125 w-125 rounded-full bg-primary/10 blur-[140px]" />
       </div>
 
-      <div className="mx-auto flex max-w-5xl flex-col items-center px-6 text-center">
+      <div className="relative z-30 mx-auto flex max-w-5xl flex-col items-center px-6 text-center">
         {/* Badge */}
         <div className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-primary/10 bg-primary/5 px-4 py-2 text-sm font-medium text-primary shadow-sm">
           <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
