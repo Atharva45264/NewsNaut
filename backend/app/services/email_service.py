@@ -68,12 +68,12 @@ def send_email():
     )
 
     EMAIL_USER = os.getenv("EMAIL_USER")
-    EMAIL_PASS = os.getenv("EMAIL_PASS")
+    EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
     EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
 
     if not (
         EMAIL_USER
-        and EMAIL_PASS
+        and EMAIL_PASSWORD
         and EMAIL_RECEIVER
     ):
         print("❌ Missing email environment variables.")
@@ -105,7 +105,7 @@ def send_email():
 
             server.login(
                 EMAIL_USER,
-                EMAIL_PASS,
+                EMAIL_PASSWORD,
             )
 
             server.send_message(message)
