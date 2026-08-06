@@ -2,20 +2,59 @@ from app.scrapers.rss_scraper import fetch_news
 from app.services.save_articles import save_articles
 from app.services.summarize import summarize_articles
 from app.services.email_service import send_email
-from app.services.youtube_service import process_youtube
+
+from app.youtube.sync import sync_channels
+
 
 def run_pipeline():
-    print("Fetching news...")
-    data = fetch_news()
-    save_articles(data)
+    print("\n==============================")
+    print("🚀 Starting NewsNaut Pipeline")
+    print("==============================\n")
 
-    print("Processing YouTube...")
-    process_youtube()   
+    # ----------------------------
+    # Fetch RSS News
+    # ----------------------------
 
-    print("Summarizing...")
+    print("📰 Fetching latest news...")
+
+    news = fetch_news()
+
+    save_articles(news)
+
+    print(f"✅ {len(news)} articles fetched.\n")
+
+    # ----------------------------
+    # AI News Summaries
+    # ----------------------------
+
+    print("🤖 Generating AI news summaries...")
+
     summarize_articles()
 
-    print("Sending email...")
+    print("✅ News summaries completed.\n")
+
+    # ----------------------------
+    # YouTube Sync
+    # ----------------------------
+
+    print("📺 Checking tracked YouTube channels...")
+
+    result = sync_channels()
+
+    print(
+        f"✅ {result['updated']} channel(s) updated.\n"
+    )
+
+    # ----------------------------
+    # Daily Email
+    # ----------------------------
+
+    print("📧 Sending daily digest...")
+
     send_email()
 
-    print("Done!")
+    print("✅ Email sent.\n")
+
+    print("==============================")
+    print("🎉 Pipeline Completed Successfully")
+    print("==============================")

@@ -93,6 +93,127 @@ def get_section(title, emoji, articles, color, button_text="Read More"):
 
     return html
 
+def get_youtube_section(channels):
+    """
+    Build YouTube section from youtube_collection.
+    """
+
+    html = """
+    <h2 style="
+        color:#ef4444;
+        font-family:Arial,sans-serif;
+        margin-top:40px;
+        margin-bottom:20px;
+    ">
+        📺 Latest YouTube Updates
+    </h2>
+    """
+
+    if not channels:
+        html += """
+        <div style="
+            background:#1e293b;
+            padding:20px;
+            border-radius:12px;
+            color:#cbd5e1;
+            font-family:Arial,sans-serif;
+        ">
+            No new YouTube videos today.
+        </div>
+        """
+        return html
+
+    for channel in channels:
+
+        latest = channel.get("latestVideo", {})
+
+        title = latest.get("title", "No video")
+
+        summary = latest.get(
+            "summary",
+            "Summary unavailable."
+        )
+
+        thumbnail = latest.get("thumbnail", "")
+
+        video_id = latest.get("videoId", "")
+
+        channel_name = channel.get(
+            "channelName",
+            "YouTube Channel"
+        )
+
+        watch_url = f"https://youtu.be/{video_id}"
+
+        html += f"""
+        <div style="
+            background:#1e293b;
+            border-radius:16px;
+            overflow:hidden;
+            margin-bottom:25px;
+            border:1px solid #334155;
+        ">
+
+            <img
+                src="{thumbnail}"
+                width="100%"
+                style="
+                    display:block;
+                    max-height:280px;
+                    object-fit:cover;
+                "
+            >
+
+            <div style="padding:22px;">
+
+                <p style="
+                    color:#ef4444;
+                    font-weight:bold;
+                    margin:0;
+                    font-family:Arial,sans-serif;
+                ">
+                    📺 {channel_name}
+                </p>
+
+                <h3 style="
+                    color:white;
+                    margin-top:12px;
+                    font-family:Arial,sans-serif;
+                ">
+                    {title}
+                </h3>
+
+                <p style="
+                    color:#cbd5e1;
+                    line-height:1.7;
+                    font-family:Arial,sans-serif;
+                ">
+                    {summary}
+                </p>
+
+                <a
+                    href="{watch_url}"
+                    style="
+                        display:inline-block;
+                        margin-top:18px;
+                        background:#ef4444;
+                        color:white;
+                        text-decoration:none;
+                        padding:12px 22px;
+                        border-radius:10px;
+                        font-weight:bold;
+                        font-family:Arial,sans-serif;
+                    "
+                >
+                    ▶ Watch on YouTube
+                </a>
+
+            </div>
+
+        </div>
+        """
+
+    return html
 
 def build_email_html(
     politics,
@@ -227,13 +348,7 @@ easy-to-read insights.
 
     # ================= YOUTUBE =================
 
-    html += get_section(
-        title="Latest YouTube Videos",
-        emoji="🎥",
-        articles=youtube,
-        color="#a855f7",
-        button_text="Watch on YouTube",
-    )
+    html += get_youtube_section(youtube)
 
     # ================= STATISTICS =================
 
