@@ -1,5 +1,7 @@
 from app.database.mongo import youtube_collection
 from app.youtube.youtube_api import get_latest_video
+from app.youtube.transcript import get_video_transcript
+from app.youtube.summarize_video import summarize_video
 
 
 def sync_channels():
@@ -24,8 +26,15 @@ def sync_channels():
         ):
             continue
 
-        latest["summary"] = ""
-        latest["summaryGenerated"] = False
+        transcript = get_video_transcript(latest["videoId"])
+
+        if transcript:
+            summary = summarize_video(transcript)
+            latest["summary"] = summary
+            latest["summaryGenerated"] = True
+        else:
+            latest["summary"] = "Transcript unavailable."
+            latest["summaryGenerated"] = False
 
         youtube_collection.update_one(
             {
